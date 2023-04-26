@@ -1,0 +1,13 @@
+import base64
+
+SPOTIFY_CLIENT_ID = '459ffc14ece244a993f423363faeab49'
+SPOTIFY_CLIENT_SECRET = 'baf5a3d5894a45629e8f04e1410ee129'
+
+TICKETMASTER_ID = 'WFzi9NOgEWHA2UbR9CmlU2afRROOV9wR'
+
+client_creds = f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}"
+client_creds_b64 = base64.b64encode(client_creds.encode())
+SPOTIFY_AUTH_HEADER = client_creds_b64.decode()
+
+GOOGLE_CLIENT = 'AIzaSyC4GYQA9Yk5TpyJKIb4ATbasxQ9TIcpiaw'
+GOOGLE_SECRET = 'fPJXOHOcqYW9FYhQcLpliYfR-5o='
