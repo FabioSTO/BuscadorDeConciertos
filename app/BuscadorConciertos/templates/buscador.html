@@ -1,0 +1,16 @@
+<form method="post">
+    {% csrf_token %}
+    <label for="nombre">Búsqueda artistas:</label>
+    <input type="text" name="nombre" id="nombre">
+    <button type="submit">Enviar</button>
+</form>
+
+<p>{{ nombre }}     -------     {{ attraction_id }}</p>
+
+<ul>
+    {% for event in events %}
+        <li>{{ event.dateS }} | {{ event.name }} | {{ event.place }} | {{ event.price }}</li>
+    {% empty %}
+        <li>No hay eventos disponibles.</li>
+    {% endfor %}
+</ul>
