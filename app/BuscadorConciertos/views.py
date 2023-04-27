@@ -1,6 +1,7 @@
 import requests
 from . import credentials
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
+from .models import Artist, Concierto
 
 # Create your views here.
 
@@ -17,15 +18,25 @@ def get_attraction_id(artist_name):
         datete = response2.json()
 
         attraction_id = datete['_embedded']['attractions'][0]['id']
+        attraction_name = datete['_embedded']['attractions'][0]['name']
+
+        artist = Artist(name=attraction_name, artist_id=attraction_id)
+        artist.save()
+
     except KeyError:
-        attraction_id = None
+        artist = None
     
-    return attraction_id
+    return artist.id  #El id dentro de la base de usuario
 
 
-def get_events_for_id(attraction_id):
+def get_events_for_id(artist_id):
     
     try:
+
+        artist = Artist.objects.get(id=artist_id)
+
+        artid = artist.artist_id
+        attraction_id = artist.artist_id
 
         url3 = f'https://app.ticketmaster.com/discovery/v2/events?apikey={credentials.TICKETMASTER_ID}&attractionId={attraction_id}'
 
@@ -33,7 +44,7 @@ def get_events_for_id(attraction_id):
 
         datazo = response3.json()
 
-        events = []
+
         for dato in datazo['_embedded']['events']:
             name = dato['name']
             dateS = dato['dates']['start']['localDate']
@@ -41,40 +52,60 @@ def get_events_for_id(attraction_id):
                 place = place['city']['name']
             for p in dato['priceRanges']:
                 price = p['min']
-            events.append({'dateS': dateS, 'name': name, 'place': place, 'price': price})
+            concierto = Concierto(name=name, date=dateS, place=place, price=price, artist=artist)
+            concierto.save()
 
     except KeyError:
         puedoponercualquiercosayfunciona = None
 
-    return events
-
 
 def ticketmaster(request, artist_name):
 
-    attraction_id = get_attraction_id(artist_name)
+    artist_id = get_attraction_id(artist_name)
 
-    return attraction_id
+    return artist_id
 
 
-def ticket_events(request, attraction_id):
+def ticket_events(request, artist_id):
     
-    event = get_events_for_id(attraction_id)
-    return event
+    get_events_for_id(artist_id)
 
+def clean_database(request):
+    artists = Artist.objects.all()
+    conciertos = Concierto.objects.all()
+
+    # Borra todos los artistas, con el cascade del modelo ya se eliminan los conciertos
+    artists.delete()
+
+    return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
+
+def delete_artist(request, artist_id):
+    artists = Artist.objects.all()
+    conciertos = Concierto.objects.all()
+
+    artist = Artist.objects.get(id=artist_id)
+    artist.delete()
+
+    return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
 
 def buscador(request):
+  artists = Artist.objects.all()
+  conciertos = Concierto.objects.all()
+
   if request.method == 'POST':
-    nombre = request.POST.get('nombre')
+    if 'buscarArtista' in request.POST:
+        nombre = request.POST.get('nombre')
 
 
-    attraction_id = (ticketmaster(request, nombre))
+        artist_id = (ticketmaster(request, nombre))
 
-    events_for_id = ticket_events(request, attraction_id)
+        ticket_events(request, artist_id)
 
-    #nuevo_artista = Artista(nombre=nombre)
-    #nuevo_artista.save()
-    #return redirect('agregar_artista')
-
-    return render(request, 'buscador.html', {'nombre': nombre, 'attraction_id': attraction_id, 'events': events_for_id})
+        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos})
+    
+    elif 'iniciarBusqueda' in request.POST:
+        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos})
+    
   else:
-    return render(request, 'buscador.html')
+
+    return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos})

@@ -1,16 +1,69 @@
-<form method="post">
-    {% csrf_token %}
-    <label for="nombre">Búsqueda artistas:</label>
-    <input type="text" name="nombre" id="nombre">
-    <button type="submit">Enviar</button>
-</form>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'BuscadorConciertos/css/belleza.css' %}">
+</head>
 
-<p>{{ nombre }}     -------     {{ attraction_id }}</p>
+<div class="container">
+    <div class="box">
+        <form method="post">
+            {% csrf_token %}
+            <label for="nombre">Búsqueda artistas:</label>
+            <input type="text" name="nombre" id="nombre">
+            <button type="submit" name="buscarArtista">Enviar</button>
+        </form>
+    </div>
+    
+    <img id="bb" src = "{% static 'BuscadorConciertos/img/bb.jpg' %}">
+    
+    <div class="box">
+        <form method="post">
+            {% csrf_token %}
+            <label for="ubicacion">Ubicación: </label>
+            <input type="text" name="ubicacion" id="ubicacion"><br>
+            <label for="pais">País búsqueda: </label>
+            <input type="text" name="pais" id="pais"><br>
+            <label for="presupuesto">Presupuesto: </label>
+            <input type="text" name="presupuesto" id="presupuesto"><br>
+            <label for="fechaInicio">Fecha de inicio:</label>
+            <input type="date" id="fechaInicio" name="fechaInicio"><br>
+            <label for="fechaFin">Fecha de fin:</label>
+            <input type="date" id="fechaFin" name="fechaFin"><br>
+            <button type="submit" name="iniciarBusqueda">Iniciar búsqueda</button>
 
-<ul>
-    {% for event in events %}
-        <li>{{ event.dateS }} | {{ event.name }} | {{ event.place }} | {{ event.price }}</li>
-    {% empty %}
-        <li>No hay eventos disponibles.</li>
+        </form>
+    </div>
+</div>
+
+<h1>Lista de artistas</h1>
+  <ul>
+    {% for artist in artists %}
+      <li>{{ artist.name }}
+        <form method="post" action="{% url 'delete_artist' artist.id %}">
+            {% csrf_token %}
+            <button type="submit">Eliminar</button>
+        </form>
+      </li>
     {% endfor %}
-</ul>
+  </ul>
+
+<h1>Lista de conciertos (artista)</h1>
+  <ul>
+    {% for artist in artists %}
+      <li>{{ artist.name }}
+        <ul>
+        {% for concierto in conciertos %}
+            {% if concierto.artist == artist %}
+                <li>{{ concierto.date }} | {{ concierto.name }} | {{ concierto.place }} | {{ concierto.price }}</li>
+            {% endif %}
+        {% empty %}
+            <li>No hay eventos disponibles.</li>
+            {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <form method="post" action="{% url 'clean_database' %}">
+    {% csrf_token %}
+    <button type="submit">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
+</form>
