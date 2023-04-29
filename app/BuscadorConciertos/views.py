@@ -35,7 +35,6 @@ def get_events_for_id(artist_id):
 
         artist = Artist.objects.get(id=artist_id)
 
-        artid = artist.artist_id
         attraction_id = artist.artist_id
 
         url3 = f'https://app.ticketmaster.com/discovery/v2/events?apikey={credentials.TICKETMASTER_ID}&attractionId={attraction_id}'
@@ -43,7 +42,6 @@ def get_events_for_id(artist_id):
         response3 = requests.get(url3)
 
         datazo = response3.json()
-
 
         for dato in datazo['_embedded']['events']:
             name = dato['name']
@@ -70,6 +68,7 @@ def ticket_events(request, artist_id):
     
     get_events_for_id(artist_id)
 
+
 def clean_database(request):
     artists = Artist.objects.all()
     conciertos = Concierto.objects.all()
@@ -78,6 +77,7 @@ def clean_database(request):
     artists.delete()
 
     return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
+
 
 def delete_artist(request, artist_id):
     artists = Artist.objects.all()
@@ -88,6 +88,7 @@ def delete_artist(request, artist_id):
 
     return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
 
+
 def buscador(request):
   artists = Artist.objects.all()
   conciertos = Concierto.objects.all()
@@ -96,7 +97,6 @@ def buscador(request):
     if 'buscarArtista' in request.POST:
         nombre = request.POST.get('nombre')
 
-
         artist_id = (ticketmaster(request, nombre))
 
         ticket_events(request, artist_id)
@@ -104,6 +104,12 @@ def buscador(request):
         return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos})
     
     elif 'iniciarBusqueda' in request.POST:
+        ubi = request.POST.get('ubicacion')
+        pais = request.POST.get('pais')
+        presupuesto = request.POST.get('presupuesto')
+        inicio = request.POST.get('inicio')
+        fin = request.POST.get('fin')
+
         return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos})
     
   else:

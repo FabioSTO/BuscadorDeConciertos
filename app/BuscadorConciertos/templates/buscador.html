@@ -20,14 +20,27 @@
             {% csrf_token %}
             <label for="ubicacion">Ubicación: </label>
             <input type="text" name="ubicacion" id="ubicacion"><br>
+
             <label for="pais">País búsqueda: </label>
-            <input type="text" name="pais" id="pais"><br>
+            <select name="pais" id="pais">
+              <option value="">Selecciona un país</option>
+              <option value="es">España</option>
+              <option value="uk">U.S.A</option>
+              <option value="fr">Francia</option>
+              <option value="uk">Italia</option>
+              <option value="uk">Reino Unido</option>
+              </select><br>
+
             <label for="presupuesto">Presupuesto: </label>
-            <input type="text" name="presupuesto" id="presupuesto"><br>
-            <label for="fechaInicio">Fecha de inicio:</label>
-            <input type="date" id="fechaInicio" name="fechaInicio"><br>
-            <label for="fechaFin">Fecha de fin:</label>
-            <input type="date" id="fechaFin" name="fechaFin"><br>
+            <input type="range"  name="presupuesto" id="presupuesto" min="50" max="500" step="10"><output id="valor"></output>
+            <label>€</label><br>
+
+            <label for="inicio">Fecha de inicio:</label>
+            <input type="date" id="inicio" name="inicio"><br>
+
+            <label for="fin">Fecha de fin:</label>
+            <input type="date" id="fin" name="fin"><br>
+
             <button type="submit" name="iniciarBusqueda">Iniciar búsqueda</button>
 
         </form>
@@ -67,3 +80,14 @@
     {% csrf_token %}
     <button type="submit">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
 </form>
+
+<script>
+  const valor = document.querySelector("#valor")
+  const presupuesto = document.querySelector("#presupuesto")
+
+  valor.textContent = presupuesto.value
+
+  presupuesto.addEventListener("input", (event) => {
+    valor.textContent = event.target.value
+  })
+</script>
