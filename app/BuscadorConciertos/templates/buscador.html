@@ -60,21 +60,9 @@
   </ul>
 
 <h1>Lista de conciertos (artista)</h1>
-  <ul>
-    {% for artist in artists %}
-      <li>{{ artist.name }}
-        <ul>
-        {% for concierto in conciertos %}
-            {% if concierto.artist == artist %}
-                <li>{{ concierto.date }} | {{ concierto.name }} | {{ concierto.place }} | {{ concierto.price }}</li>
-            {% endif %}
-        {% empty %}
-            <li>No hay eventos disponibles.</li>
-            {% endfor %}
-        </ul>
-      </li>
-    {% endfor %}
-  </ul>
+  <div>
+    {{conciertos|safe}}
+  </div>
 
   <form method="post" action="{% url 'clean_database' %}">
     {% csrf_token %}

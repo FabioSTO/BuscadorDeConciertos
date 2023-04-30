@@ -2,6 +2,7 @@ import requests
 from . import credentials
 from django.shortcuts import render, redirect, reverse
 from .models import Artist, Concierto
+import pandas as pd
 
 # Create your views here.
 
@@ -91,7 +92,18 @@ def delete_artist(request, artist_id):
 
 def buscador(request):
   artists = Artist.objects.all()
-  conciertos = Concierto.objects.all()
+  conciertos = Concierto.objects.all().values() #Obtener valores de los conciertos
+  conciertos_df = pd.DataFrame(conciertos) #Importamos a un dataframe de pandas
+
+  #Comprobar si no está vacío, si está vacío y se hace alguna operación da error
+  if not conciertos_df.empty:
+    #Aquí podemos hacer operaciones sobre el df
+    conciertos_df = conciertos_df.drop('id', axis = 1)
+
+  #Transformas el df a formato html para luego pasarlo al render
+  conciertos_dict = conciertos_df.to_html()
+
+  print(conciertos_df)
 
   if request.method == 'POST':
     if 'buscarArtista' in request.POST:
@@ -101,7 +113,7 @@ def buscador(request):
 
         ticket_events(request, artist_id)
 
-        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos})
+        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict})
     
     elif 'iniciarBusqueda' in request.POST:
         ubi = request.POST.get('ubicacion')
@@ -110,8 +122,8 @@ def buscador(request):
         inicio = request.POST.get('inicio')
         fin = request.POST.get('fin')
 
-        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos})
+        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict})
     
   else:
 
-    return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos})
+    return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict})
