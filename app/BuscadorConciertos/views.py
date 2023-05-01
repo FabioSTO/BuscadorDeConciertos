@@ -3,8 +3,20 @@ from . import credentials
 from django.shortcuts import render, redirect, reverse
 from .models import Artist, Concierto
 import pandas as pd
+from geopy.geocoders import Nominatim
 
 # Create your views here.
+
+#Código para obtener el país de celebración
+geolocator = Nominatim(user_agent="aplicacion_django-cancelo_fernandez_senande")
+
+def get_country(ciudad):
+    location = geolocator.geocode(ciudad)
+    if location:
+        return location.address.split(', ')[-1]
+    else:
+        return None
+
 
 def get_attraction_id(artist_name):
 
@@ -49,9 +61,10 @@ def get_events_for_id(artist_id):
             dateS = dato['dates']['start']['localDate']
             for place in dato['_embedded']['venues']:
                 place = place['city']['name']
+                country = get_country(place)
             for p in dato['priceRanges']:
                 price = p['min']
-            concierto = Concierto(name=name, date=dateS, place=place, price=price, artist=artist)
+            concierto = Concierto(name=name, date=dateS, place=place, country=country, price=price, artist=artist)
             concierto.save()
 
     except KeyError:
