@@ -1,6 +1,7 @@
 <head>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'BuscadorConciertos/css/belleza.css' %}">
+    <script src="{% static 'BuscadorConciertos/js/presupuesto.js' %}"></script>
 </head>
 
 <div class="container">
@@ -24,11 +25,11 @@
             <label for="pais">País búsqueda: </label>
             <select name="pais" id="pais">
               <option value="">Selecciona un país</option>
-              <option value="es">España</option>
-              <option value="uk">U.S.A</option>
-              <option value="fr">Francia</option>
-              <option value="uk">Italia</option>
-              <option value="uk">Reino Unido</option>
+              <option value="España">España</option>
+              <option value="United States">United States</option>
+              <option value="Francia">Francia</option>
+              <option value="Italia">Italia</option>
+              <option value="Reino Unido">Reino Unido</option>
               </select><br>
 
             <label for="presupuesto">Presupuesto: </label>
@@ -68,14 +69,3 @@
     {% csrf_token %}
     <button type="submit">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
 </form>
-
-<script>
-  const valor = document.querySelector("#valor")
-  const presupuesto = document.querySelector("#presupuesto")
-
-  valor.textContent = presupuesto.value
-
-  presupuesto.addEventListener("input", (event) => {
-    valor.textContent = event.target.value
-  })
-</script>
