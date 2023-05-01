@@ -59,6 +59,7 @@ def get_events_for_id(artist_id):
         for dato in datazo['_embedded']['events']:
             name = dato['name']
             dateS = dato['dates']['start']['localDate']
+            #country = dato['place']['country']['name']
             for place in dato['_embedded']['venues']:
                 place = place['city']['name']
                 country = get_country(place)
@@ -108,15 +109,8 @@ def buscador(request):
   conciertos = Concierto.objects.all().values() #Obtener valores de los conciertos
   conciertos_df = pd.DataFrame(conciertos) #Importamos a un dataframe de pandas
 
-  #Comprobar si no está vacío, si está vacío y se hace alguna operación da error
-  if not conciertos_df.empty:
-    #Aquí podemos hacer operaciones sobre el df
-    conciertos_df = conciertos_df.drop('id', axis = 1)
-
   #Transformas el df a formato html para luego pasarlo al render
   conciertos_dict = conciertos_df.to_html()
-
-  print(conciertos_df)
 
   if request.method == 'POST':
     if 'buscarArtista' in request.POST:
@@ -135,8 +129,21 @@ def buscador(request):
         inicio = request.POST.get('inicio')
         fin = request.POST.get('fin')
 
+        conciertos_df = aplicar_filtros(conciertos_df, pais)
+        conciertos_dict = conciertos_df.to_html()
+
+        print(conciertos_df)
+
         return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict})
     
   else:
 
     return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict})
+  
+
+def aplicar_filtros(df, pais):
+    if not df.empty:
+        if pais:
+            df = df.drop('id', axis=1)
+            df = df.loc[df['country'] == pais]
+    return df
