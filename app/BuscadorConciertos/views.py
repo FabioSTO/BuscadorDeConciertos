@@ -56,7 +56,7 @@ def get_events_for_id(artist_id):
             concierto.save()
 
     except KeyError:
-        puedoponercualquiercosayfunciona = None
+        key = None
 
 
 def ticketmaster(request, artist_name):

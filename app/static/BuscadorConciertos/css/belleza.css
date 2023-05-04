@@ -14,3 +14,11 @@
 #bb {
 	max-width: 200px;
 }
+
+li {
+	display: flex;
+  }
+  
+li form {
+	margin-left: 1rem;
+}

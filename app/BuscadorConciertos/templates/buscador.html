@@ -1,7 +1,8 @@
 <head>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'BuscadorConciertos/css/belleza.css' %}">
-</head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
 
 <div class="container">
     <div class="box">
@@ -22,7 +23,7 @@
             <input type="text" name="ubicacion" id="ubicacion"><br>
 
             <label for="pais">País búsqueda: </label>
-            <select name="pais" id="pais">
+            <select name="pais" id="pais" required>
               <option value="">Selecciona un país</option>
               <option value="Spain">España</option>
               <option value="United States Of America">United States</option>
@@ -32,14 +33,14 @@
               </select><br>
 
             <label for="presupuesto">Presupuesto: </label>
-            <input type="range"  name="presupuesto" id="presupuesto" min="50" max="500" step="10"><output id="valor"></output>
+            <input type="range"  name="presupuesto" id="presupuesto" min="50" max="500" step="10" required><output id="valor"></output>
             <label>€</label><br>
 
             <label for="inicio">Fecha de inicio:</label>
-            <input type="date" id="inicio" name="inicio"><br>
+            <input type="date" id="inicio" name="inicio" value="2023-05-04" required><br>
 
             <label for="fin">Fecha de fin:</label>
-            <input type="date" id="fin" name="fin"><br>
+            <input type="date" id="fin" name="fin" value="2024-01-01" required><br>
 
             <button type="submit" name="iniciarBusqueda">Iniciar búsqueda</button>
 
@@ -47,18 +48,20 @@
     </div>
 </div>
 
+<div class="box">
 <h1>Lista de artistas</h1>
   <ul>
     {% for artist in artists %}
-      <li>{{ artist.name }}
-        <form method="post" action="{% url 'delete_artist' artist.id %}">
+      <li>
+        {{ artist.name }}
+        <form id="delete-form-{{ artist.id }}" method="post" action="{% url 'delete_artist' artist.id %}">
             {% csrf_token %}
-            <button type="submit">Eliminar</button>
+            <button type="submit" class="delete-button">Eliminar</button>
         </form>
       </li>
     {% endfor %}
   </ul>
-
+</div>
 <h1>Lista de conciertos (artista)</h1>
   <div>
     {{conciertos|safe}}
@@ -69,3 +72,4 @@
     <button type="submit">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
 </form>
 <script src="{% static 'BuscadorConciertos/js/presupuesto.js' %}"></script>
+<script src="{% static 'BuscadorConciertos/js/forms.js' %}"></script>
