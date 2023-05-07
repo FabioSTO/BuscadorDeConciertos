@@ -5,6 +5,19 @@ from .models import Artist, Concierto
 import pandas as pd
 from datetime import datetime
 
+def get_distance(origin, destination):
+    url = f'https://maps.googleapis.com/maps/api/directions/json?destination={destination}&origin={origin}&key={credentials.GOOGLE_CLIENT}'
+    response = requests.get(url)
+    distance = 0
+    if 'routes' in response.json():
+        routes = response.json()['routes']
+        if routes and 'legs' in routes[0]:
+            legs = routes[0]['legs']
+            if legs and 'steps' in legs[0]:
+                for step in legs[0]['steps']:
+                    distance += step['distance']['value']
+    return distance
+
 # Create your views here.
 def get_attraction_id(artist_name):
 
@@ -116,7 +129,7 @@ def buscador(request):
         inicio = request.POST.get('inicio')
         fin = request.POST.get('fin')
 
-        conciertos_df = aplicar_filtros(conciertos_df, pais, presupuesto, inicio, fin)
+        conciertos_df = aplicar_filtros(conciertos_df, pais, presupuesto, inicio, fin, ubi)
         conciertos_dict = conciertos_df.to_html()
 
         print(conciertos_df)
@@ -128,7 +141,7 @@ def buscador(request):
     return render(request, 'buscador.html', {'artists': artists})
   
 
-def aplicar_filtros(df, pais, presupuesto, inicio, fin):
+def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
     if not df.empty:
         print(inicio)
         fecha_inicio = datetime.strptime( inicio,'%Y-%m-%d').date()
@@ -141,4 +154,18 @@ def aplicar_filtros(df, pais, presupuesto, inicio, fin):
         df = df.sort_values(by = ['date'])
         rango_dias = (df['date'] >fecha_inicio) & (df['date'] <=fecha_fin)
         df = df.loc[rango_dias]
-    return df
+
+        primerdia = df.iloc[0]['date']  #Obtiene el día del primer concierto
+        limite = primerdia + pd.Timedelta(days=7)  
+        primerasemana = df.loc[(df['date'] < limite)]   #Obtiene los conciertos de la primera semana
+
+
+        for index, row in primerasemana.iterrows():     #Calcula distancia entre la ubi del usuario y las citys de la primera semana
+            dist = get_distance(ubi, row['place'])
+            pricedist = (float(row['price']) + round(dist/500000, 1)) #Calula según 1$/500KM (por ahora da juego)
+            primerasemana.loc[index, 'distance'] = dist
+            primerasemana.loc[index, 'price+dist'] = pricedist
+            new_origin=primerasemana.loc[primerasemana['price+dist'].idxmax()]
+            ubi=new_origin['place']
+
+    return primerasemana
