@@ -130,7 +130,8 @@ def buscador(request):
         fin = request.POST.get('fin')
 
         conciertos_df = aplicar_filtros(conciertos_df, pais, presupuesto, inicio, fin, ubi)
-        conciertos_dict = conciertos_df.to_html()
+        dataframe_selecciones = pd.DataFrame(conciertos_df)
+        conciertos_dict = dataframe_selecciones.to_html()
 
         print(conciertos_df)
 
@@ -156,16 +157,54 @@ def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
         df = df.loc[rango_dias]
 
         primerdia = df.iloc[0]['date']  #Obtiene el día del primer concierto
-        limite = primerdia + pd.Timedelta(days=7)  
-        primerasemana = df.loc[(df['date'] < limite)]   #Obtiene los conciertos de la primera semana
 
+        total_price = 0.0
+        selecciones = []
 
-        for index, row in primerasemana.iterrows():     #Calcula distancia entre la ubi del usuario y las citys de la primera semana
-            dist = get_distance(ubi, row['place'])
-            pricedist = (float(row['price']) + round(dist/500000, 1)) #Calula según 1$/500KM (por ahora da juego)
-            primerasemana.loc[index, 'distance'] = dist
-            primerasemana.loc[index, 'price+dist'] = pricedist
-            new_origin=primerasemana.loc[primerasemana['price+dist'].idxmax()]
-            ubi=new_origin['place']
+        while total_price < float(presupuesto):
+            
+            limite = primerdia + pd.Timedelta(days=7)  
 
-    return primerasemana
+            semana_actual = df.loc[(df['date'] < limite)]   #Obtiene los conciertos de la primera semana
+
+            for index, row in semana_actual.iterrows():     #Calcula distancia entre la ubi del usuario y las citys de la primera semana
+                dist = get_distance(ubi, row['place'])
+                pricedist = (float(row['price']) + round(dist/500000, 1)) #Calula según 1$/500KM (por ahora da juego)
+                semana_actual = semana_actual.copy()
+                semana_actual.loc[index, 'distance'] = dist
+                semana_actual.loc[index, 'price+dist'] = pricedist
+                
+
+            seleccion = semana_actual.loc[semana_actual['price+dist'].idxmin()] #Seleccionamos "mejor" concierto de la semana actual
+
+            total_price += float(seleccion['price']) #Va obteniendo el precio total
+
+            selecciones.append(seleccion) #Añade a la lista de seleccionados el mejor concierto
+
+            #selecciones = pd.concat([selecciones, seleccion], ignore_index=True)
+
+            print(total_price)
+
+            ubi = seleccion['place'] #Nueva ubi de origen
+
+            df = df.loc[df['date'] >= limite] #Eliminar filas de esta semana
+
+            if df.empty:
+                break
+
+            primerdia = df.iloc[0]['date']  #Nuevo primer dia de nueva semana
+
+    return selecciones
+
+#        primerdia = df.iloc[0]['date']  #Obtiene el día del primer concierto
+#        limite = primerdia + pd.Timedelta(days=7)  
+#        primerasemana = df.loc[(df['date'] < limite)]   #Obtiene los conciertos de la primera semana
+#        for index, row in primerasemana.iterrows():     #Calcula distancia entre la ubi del usuario y las citys de la primera semana
+#            dist = get_distance(ubi, row['place'])
+#            pricedist = (float(row['price']) + round(dist/500000, 1)) #Calula según 1$/500KM (por ahora da juego)
+#            primerasemana.loc[index, 'distance'] = dist
+#            primerasemana.loc[index, 'price+dist'] = pricedist
+#            new_origin=primerasemana.loc[primerasemana['price+dist'].idxmin()]
+#            ubi=new_origin['place']
+#
+#    return primerasemana
