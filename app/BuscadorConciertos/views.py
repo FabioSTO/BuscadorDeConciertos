@@ -5,6 +5,7 @@ from .models import Artist, Concierto
 import pandas as pd
 from datetime import datetime
 
+'''
 def get_distance(origin, destination):
     url = f'https://maps.googleapis.com/maps/api/directions/json?destination={destination}&origin={origin}&key={credentials.GOOGLE_CLIENT}'
     response = requests.get(url)
@@ -17,6 +18,30 @@ def get_distance(origin, destination):
                 for step in legs[0]['steps']:
                     distance += step['distance']['value']
     return distance
+
+
+def get_distance(origin, destination):
+
+    location1 = geolocator.geocode(origin)
+    location2 = geolocator.geocode(destination)
+
+    coord1 = (location1.latitude, location1.longitude)
+    coord2 = (location2.latitude, location2.longitude)
+
+    dist = geodesic(coord1, coord2).kilometers
+    
+    return dist;
+
+'''
+def get_distance(origen, destino):
+    url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origen}&destinations={destino}&key={credentials.GOOGLE_CLIENT}"
+
+    response = requests.get(url)
+    json_response = response.json()
+
+    distancia_metros = json_response["rows"][0]["elements"][0]["distance"]["value"]
+    return distancia_metros
+
 
 # Create your views here.
 def get_attraction_id(artist_name):
@@ -167,16 +192,17 @@ def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
 
             semana_actual = df.loc[(df['date'] < limite)]   #Obtiene los conciertos de la primera semana
 
-            for index, row in semana_actual.iterrows():     #Calcula distancia entre la ubi del usuario y las citys de la primera semana
-                dist = get_distance(ubi, row['place'])
-                pricedist = (float(row['price']) + round(dist/500000, 1)) #Calula según 1$/500KM (por ahora da juego)
-                semana_actual = semana_actual.copy()
-                semana_actual.loc[index, 'distance'] = dist
-                semana_actual.loc[index, 'price+dist'] = pricedist
-                
+            distances = get_distance(ubi, semana_actual['place'])
+            pricedist = semana_actual['price'].astype(float) + round(distances / 500000, 1)
 
+            semana_actual['distance'] = distances
+            semana_actual['price+dist'] = pricedist
+                
             seleccion = semana_actual.loc[semana_actual['price+dist'].idxmin()] #Seleccionamos "mejor" concierto de la semana actual
 
+            arid = seleccion['artist_id']
+            df = df.query("artist_id != @arid")
+            
             total_price += float(seleccion['price']) #Va obteniendo el precio total
 
             selecciones.append(seleccion) #Añade a la lista de seleccionados el mejor concierto
@@ -184,6 +210,7 @@ def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
             #selecciones = pd.concat([selecciones, seleccion], ignore_index=True)
 
             print(total_price)
+            print(arid)
 
             ubi = seleccion['place'] #Nueva ubi de origen
 

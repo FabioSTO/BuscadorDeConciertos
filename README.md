@@ -6,8 +6,8 @@
 
 |         |   Fabio   |    Fran   |  Miguel   |
 |---------|-----------|-----------|-----------|
-| Semana 1| 12 horas  |           |           |
-| Semana 2|           |           |           |
+| Semana 1| 12 horas  |           |  7 horas  |
+| Semana 2| 16 horas  |           |  13 horas |
 | Semana 3|           |           |           |
 | Semana 4|           |           |           |
 
