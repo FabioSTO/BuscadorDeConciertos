@@ -6,20 +6,14 @@ import pandas as pd
 from datetime import datetime
 
 '''
-def get_distance(origin, destination):
-    url = f'https://maps.googleapis.com/maps/api/directions/json?destination={destination}&origin={origin}&key={credentials.GOOGLE_CLIENT}'
+def get_route(origin, destination,waypoints):
+    url = f'https://maps.googleapis.com/maps/api/directions/json?destination={destination}&origin={origin}&waypoints={waypoints}&key={credentials.GOOGLE_CLIENT}'
     response = requests.get(url)
-    distance = 0
-    if 'routes' in response.json():
-        routes = response.json()['routes']
-        if routes and 'legs' in routes[0]:
-            legs = routes[0]['legs']
-            if legs and 'steps' in legs[0]:
-                for step in legs[0]['steps']:
-                    distance += step['distance']['value']
-    return distance
+    print(response.json())
+    return
+'''
 
-
+'''
 def get_distance(origin, destination):
 
     location1 = geolocator.geocode(origin)
@@ -158,9 +152,30 @@ def buscador(request):
         dataframe_selecciones = pd.DataFrame(conciertos_df)
         conciertos_dict = dataframe_selecciones.to_html()
 
-        print(conciertos_df)
+        waypoints = ""
+        origin = ""
+        destination = ""
 
-        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict})
+        for concierto in conciertos_df[1:-1]:
+             waypoints += concierto.place + "," + concierto.country + "|"
+        origin = conciertos_df[0].place + "," + conciertos_df[0].country
+        destination = conciertos_df[-1].place + "," + conciertos_df[-1].country
+        
+        ##### MAPS #####
+        
+        maps_url = f"https://www.google.com/maps/embed/v1/directions?key={credentials.GOOGLE_CLIENT}&origin={origin}&destination={destination}&waypoints={waypoints[:-1]}&units=metric&mode=driving"
+        print(origin)
+        print(destination)
+        print(waypoints)
+        #################
+        
+
+        #### MAPS 2 ######
+        #get_route(origin, destination,waypoints)
+        ##################
+        #print(conciertos_df)
+
+        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict, 'maps_url': maps_url})
     
   else:
 

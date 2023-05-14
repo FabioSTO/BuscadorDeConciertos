@@ -2,7 +2,7 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'BuscadorConciertos/css/belleza.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  </head>
+</head>
 
 <div class="container">
     <div class="box">
@@ -71,5 +71,25 @@
     {% csrf_token %}
     <button type="submit">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
 </form>
+<iframe
+  id = "map"
+  width="1450"
+  height="1250"
+  frameborder="5" style="border:1"
+  referrerpolicy="no-referrer-when-downgrade"
+  src= "{{ maps_url }}"
+  allowfullscreen>
+</iframe>
+
+<!-- Esto no funciona, hay que mirar bien como es
+  
+<script>
+    document.getElementById("map").src
+</script>
+
+<div>
+  <script> src = "https://maps.googleapis.com/maps/api/js&key=AIzaSyC4GYQA9Yk5TpyJKIb4ATbasxQ9TIcpiaw&libraries=places"</script>
+</div>
+-->
 <script src="{% static 'BuscadorConciertos/js/presupuesto.js' %}"></script>
 <script src="{% static 'BuscadorConciertos/js/forms.js' %}"></script>
