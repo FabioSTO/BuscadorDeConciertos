@@ -5,28 +5,6 @@ from .models import Artist, Concierto
 import pandas as pd
 from datetime import datetime
 
-'''
-def get_route(origin, destination,waypoints):
-    url = f'https://maps.googleapis.com/maps/api/directions/json?destination={destination}&origin={origin}&waypoints={waypoints}&key={credentials.GOOGLE_CLIENT}'
-    response = requests.get(url)
-    print(response.json())
-    return
-'''
-
-'''
-def get_distance(origin, destination):
-
-    location1 = geolocator.geocode(origin)
-    location2 = geolocator.geocode(destination)
-
-    coord1 = (location1.latitude, location1.longitude)
-    coord2 = (location2.latitude, location2.longitude)
-
-    dist = geodesic(coord1, coord2).kilometers
-    
-    return dist;
-
-'''
 def get_distance(origen, destino):
     url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origen}&destinations={destino}&key={credentials.GOOGLE_CLIENT}"
 
@@ -168,12 +146,6 @@ def buscador(request):
         print(destination)
         print(waypoints)
         #################
-        
-
-        #### MAPS 2 ######
-        #get_route(origin, destination,waypoints)
-        ##################
-        #print(conciertos_df)
 
         return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict, 'maps_url': maps_url})
     
@@ -237,16 +209,3 @@ def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
             primerdia = df.iloc[0]['date']  #Nuevo primer dia de nueva semana
 
     return selecciones
-
-#        primerdia = df.iloc[0]['date']  #Obtiene el día del primer concierto
-#        limite = primerdia + pd.Timedelta(days=7)  
-#        primerasemana = df.loc[(df['date'] < limite)]   #Obtiene los conciertos de la primera semana
-#        for index, row in primerasemana.iterrows():     #Calcula distancia entre la ubi del usuario y las citys de la primera semana
-#            dist = get_distance(ubi, row['place'])
-#            pricedist = (float(row['price']) + round(dist/500000, 1)) #Calula según 1$/500KM (por ahora da juego)
-#            primerasemana.loc[index, 'distance'] = dist
-#            primerasemana.loc[index, 'price+dist'] = pricedist
-#            new_origin=primerasemana.loc[primerasemana['price+dist'].idxmin()]
-#            ubi=new_origin['place']
-#
-#    return primerasemana

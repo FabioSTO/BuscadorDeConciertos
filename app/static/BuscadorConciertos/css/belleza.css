@@ -1,18 +1,71 @@
+body {
+	background-color: #333333;
+}
+  
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: fixed;
+	width: 100%;
+	background: #141414;
+	background: linear-gradient(to right, #141414, #707070, #141414);
+	color: white;
+	top: 0;
+	transform: translateY(0);
+	transition: transform 0.5s ease-in-out;
+}
+
+#title {
+	margin-left: 10px;
+	font-size: 1.8em;
+	font-weight: 800;
+}
+
 .container {
+	margin-top: 10px;
 	display: flex;
 	justify-content: space-between;
+	background-color: #333333;
+	border: 1px solid white;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+#primer_container {
+	margin-top: 90px;
+}
+
+.map {
+	display: flex;
+	border: 1px solid white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	height: 500px;
+	width: 80%;
 }
 
 .box {
-	border: 1px solid black;
+	border: 1px solid white;
 	padding: 10px;
 	width: 45%;
 	display: inline-block;
 	box-sizing: border-box;
+	background-color: #CCCCCC;
+	border-radius: 10px;
 }
 
 #bb {
 	max-width: 200px;
+	padding: 10px;
+}
+
+#spoti {
+	margin-right: 40px;
+	width: 36px;
+	height: 36px;
 }
 
 li {
@@ -22,3 +75,25 @@ li {
 li form {
 	margin-left: 1rem;
 }
+
+.spinner {
+	border: 4px solid rgb(248, 242, 242);
+	border-left-color: transparent;
+	border-radius: 50%;
+	width: 36px;
+	height: 36px;
+	display: none;
+	
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+	  transform: rotate(0deg);
+	}
+  
+	100% {
+	  transform: rotate(360deg);
+	}
+}
+  

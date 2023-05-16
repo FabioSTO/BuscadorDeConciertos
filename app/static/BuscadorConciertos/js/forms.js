@@ -1,6 +1,5 @@
 $(document).ready(function() {
     $('.delete-button').click(function(event) {
-      console.log("Funciona!");
       event.preventDefault(); // para que no se envíe el form
       var form = $(this).closest('form'); // encuentra el formulario más cercano al botón Eliminar
       var url = form.attr('action'); 
@@ -23,7 +22,26 @@ $('#buscar').submit(function(event) {
       data: $('#buscar').serialize(),
       success: function(data) {
         $('#lista-artistas').html(data);  // actualiza el contenido del ul con los nuevos artistas encontrados
-      }
-    });
+    }
   });
+});
+
+var prevScrollpos = window.pageYOffset;
+var header = document.querySelector('.header');
+
+window.addEventListener('scroll', function() {
+  var currentScrollPos = window.pageYOffset;
+
+  if (prevScrollpos > currentScrollPos) {
+    header.style.transform = 'translateY(0)'; // Muestra banner
+  } else {
+    header.style.transform = 'translateY(-100%)'; // Quita banner
+  }
+
+  prevScrollpos = currentScrollPos;
+});
+
+
+
+
   
