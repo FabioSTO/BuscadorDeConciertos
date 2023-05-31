@@ -14,6 +14,23 @@
 **__Semana 1 es la semana del 24/04/2023__*
 
 
+## Como ejecutar en Docker
+
++ Antes de nada, asegurarse de tener instalado Docker y su extensión, así como Dev Containers:
+![Ejemplo configuración](/app/static/BuscadorConciertos/img/extDocker.png)
+![Ejemplo configuración](/app/static/BuscadorConciertos/img/extCont.png)
+
++ Ejecutar el comando Rebuild de Dev Containers para crear la imagen a partir del DockerFile. Cambiará la apariencia y se mostrará el container en la esquina inferior izquierda.
+![Ejemplo configuración](/app/static/BuscadorConciertos/img/rebuilds.png)
+![Ejemplo configuración](/app/static/BuscadorConciertos/img/container.png)
+
++ Ejecutar el comando 'python manage.py runserver 0.0.0.0:8000' para correr la aplicación. Es posible tener que realizar 'python manage.py makemigrations' y 'python manage.py migrate'.
+![Ejemplo configuración](/app/static/BuscadorConciertos/img/comando.png)
+
++ Acceder a la aplicación escribiendo la ruta 'http://localhost:8000/'.
+![Ejemplo configuración](/app/static/BuscadorConciertos/img/ruta.png)
+
+
 ## Riesgos en versión actual:
 
 ### Debido al funcionamiento del API de TicketMaster, las IDs de eventos y las de los artistas comparten base de datos (de TicketMaster) como AttractionIds: 
