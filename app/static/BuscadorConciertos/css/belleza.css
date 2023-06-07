@@ -59,22 +59,21 @@ body {
 }
 
 .container {
-	margin-top: 10px;
-	display: flex;
-	justify-content: space-between;
-	background-color: #333333;
-	border: 1px solid white;
-	border-radius: 10px;
-	padding: 10px;
+margin-top: 10px;
+display: flex;
+justify-content: space-between;
+background-color: #333333;
+border: 1px solid white;
+border-radius: 10px;
+padding: 10px;
 }
 
 #primer_container {
-	margin-top: 90px;
+margin-top: 90px;
 }
 
 .map {
 	display: flex;
-	border: 1px solid white;
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 5%;
@@ -87,10 +86,51 @@ body {
 	border: 1px solid white;
 	padding: 15px;
 	width: 45%;
-	display: inline-block;
 	box-sizing: border-box;
 	background-color: #CCCCCC;
 	border-radius: 10px;
+}
+
+#filtros .container {
+	background-color: #acacac;
+	border-color: #141414;
+	display: grid;
+	grid-template-columns: 35% 35% 30%;
+	gap: 10px;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+#filtros form label{
+	grid-column: 1;
+}
+
+#filtros form input, select {
+	grid-column: 2;
+}
+
+#filtros form output {
+	grid-column: 3;
+}
+
+#pais, #inicio, #fin, #ubicacion, #lista_artistas {
+	font-size: 20px;
+}
+
+#boton {
+	margin-top: 20px;
+	font-size: 30px;
+}
+
+#lista_artistas {
+	display: grid;
+	grid-template-columns: 30% 70%;
+	gap: 10px;
+}
+
+#borrar_base {
+	font-size: 30px;
+	margin-top: 20px;
 }
 
 #bb {
@@ -142,10 +182,6 @@ li form {
 	left: 50%;
 	transform: translate(-50%, -50%);
   }
-
-#artist-container {
-	position: relative;
-}
 
 .overlay-show{
   position:absolute;

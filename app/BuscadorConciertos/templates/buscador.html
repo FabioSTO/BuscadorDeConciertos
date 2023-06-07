@@ -35,37 +35,47 @@
     <img id="bb" src = "{% static 'BuscadorConciertos/img/bb.jpeg' %}">
     
     <div class="box">
-        <form method="post">
+        <form method="post" id="filtros">
             {% csrf_token %}
-            <label for="ubicacion">Ubicación: </label>
-            <input type="text" name="ubicacion" id="ubicacion"><br>
 
-            <label for="pais">País búsqueda: </label>
-            <select name="pais" id="pais" required>
-              <option value="">Selecciona un país</option>
-              <option value="Spain">España</option>
-              <option value="United States Of America">United States</option>
-              <option value="France">Francia</option>
-              <option value="Italy">Italia</option>
-              <option value="Great Britain">Reino Unido</option>
+            <div class="container">
+              <label for="ubicacion">Ubicación: </label>
+              <input type="text" name="ubicacion" id="ubicacion"><br>
+            </div>
+            
+            <div class="container">
+              <label for="pais">País búsqueda: </label>
+              <select name="pais" id="pais" required>
+                <option value="">Selecciona un país</option>
+                <option value="Spain">España</option>
+                <option value="United States Of America">United States</option>
+                <option value="France">Francia</option>
+                <option value="Italy">Italia</option>
+                <option value="Great Britain">Reino Unido</option>
               </select><br>
+            </div>
+            
+            <div class="container">
+              <label for="presupuesto">Presupuesto: </label>
+              <input type="range"  name="presupuesto" id="presupuesto" min="50" max="500" step="10" required>
+              <output id="valor"></output>
+            </div>
 
-            <label for="presupuesto">Presupuesto: </label>
-            <input type="range"  name="presupuesto" id="presupuesto" min="50" max="500" step="10" required><output id="valor"></output>
-            <label>€</label><br>
-
-            <label for="inicio">Fecha de inicio:</label>
-            <input type="date" id="inicio" name="inicio" value="2023-05-04" required><br>
-
-            <label for="fin">Fecha de fin:</label>
-            <input type="date" id="fin" name="fin" value="2024-01-01" required><br>
-
-            <button type="submit" name="iniciarBusqueda">Iniciar búsqueda</button>
+            <div class="container">
+              <label for="inicio">Fecha de inicio:</label>
+              <input type="date" id="inicio" name="inicio" value="2023-05-04" required><br>
+            </div>
+            
+            <div class="container">
+              <label for="fin">Fecha de fin:</label>
+              <input type="date" id="fin" name="fin" value="2024-01-01" required><br>
+            </div>
+            
+            <button type="submit" name="iniciarBusqueda" id="boton">Iniciar búsqueda</button>
 
         </form>
     </div>
 </div>
-
 
 
 <div class="container">
@@ -73,13 +83,13 @@
   <div id="overlay"></div>
   <div id="spinner" class="spinner"></div>
   <h1>Lista de artistas</h1>
-    <ul id="lista-artistas">
+    <ul id="lista_artistas">
       {% for artist in artists %}
         <li>
           {{ artist.name }}
           <form id="delete-form-{{ artist.id }}" method="post" action="{% url 'delete_artist' artist.id %}">
               {% csrf_token %}
-              <button type="submit" class="delete-button">Eliminar</button>
+              <button type="submit" class="delete-button" id="boton_borrar">Eliminar</button>
           </form>
         </li>
       {% endfor %}
@@ -93,7 +103,7 @@
 
       <form method="post" action="{% url 'clean_database' %}">
         {% csrf_token %}
-        <button type="submit">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
+        <button type="submit" id="borrar_base">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
     </form>
   </div>
 </div>
@@ -112,5 +122,6 @@
 <script src="{% static 'BuscadorConciertos/js/presupuesto.js' %}"></script>
 <script src="{% static 'BuscadorConciertos/js/forms.js' %}"></script>
 <script src="{% static 'BuscadorConciertos/js/spotify.js' %}"></script>
+
 
 </body>
