@@ -26,10 +26,15 @@ $('#formArtista').submit(function(event) {
     success: function(data) {
       console.log('Artista enviado');
       showLista();
+      $('#nombre').val('');
       $('#spinner').removeClass('show-spinner');
       $('#overlay').removeClass('overlay-show');
   }
 });
+});
+
+$('#formArtista').on('reset', function() {
+  $('#nombre').val(''); // Vacía el campo de texto al restablecer el formulario
 });
 
 function showLista() {
