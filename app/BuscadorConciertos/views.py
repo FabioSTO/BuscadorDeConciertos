@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, reverse
 from .models import Artist, Concierto
 import pandas as pd
 from datetime import datetime
+from django.http import HttpResponse
 
 def get_distance(origen, destino):
     url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origen}&destinations={destino}&key={credentials.GOOGLE_CLIENT}"
@@ -90,8 +91,10 @@ def clean_database(request):
 
     return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
 
+from django.views.decorators.csrf import csrf_exempt
 
-def delete_artist(request, artist_id):
+@csrf_exempt # TEMPORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL porque sino da error de csrf
+def delete_artist(request, artist_id):  # Aun asi la primera vez actualiza la pagina entera no se porque 
     artists = Artist.objects.all()
     conciertos = Concierto.objects.all()
 
@@ -100,6 +103,24 @@ def delete_artist(request, artist_id):
 
     return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
 
+from django.template.loader import render_to_string
+
+def showLista(request): #Se llama desde el forms.js para actualizar la lista que se ve sin actualizar la página
+
+    artists = Artist.objects.all()
+
+    html = render_to_string('lista_artistas.html', {'artists': artists})
+    return HttpResponse(html)
+
+def busqArtista(request):
+
+    nombre = request.POST.get('nombre')
+
+    artist_id = (ticketmaster(request, nombre))
+
+    ticket_events(request, artist_id)
+
+    return HttpResponse() #Retorna una respuesta vacía
 
 def buscador(request):
   artists = Artist.objects.all()
@@ -109,17 +130,11 @@ def buscador(request):
   #Transformas el df a formato html para luego pasarlo al render
   #conciertos_dict = conciertos_df.to_html()
 
+  url_auth = f'https://accounts.spotify.com/authorize?response_type=code&client_id={ credentials.SPOTIFY_CLIENT_ID }&redirect_uri=http://127.0.0.1:8000/SpotiLog/spotilog/&scope=user-top-read'
+
   if request.method == 'POST':
-    if 'buscarArtista' in request.POST:
-        nombre = request.POST.get('nombre')
-
-        artist_id = (ticketmaster(request, nombre))
-
-        ticket_events(request, artist_id)
-
-        return render(request, 'buscador.html', {'artists': artists})
     
-    elif 'iniciarBusqueda' in request.POST:
+    if 'iniciarBusqueda' in request.POST:
         ubi = request.POST.get('ubicacion')
         pais = request.POST.get('pais')
         presupuesto = request.POST.get('presupuesto')
@@ -147,11 +162,11 @@ def buscador(request):
         print(waypoints)
         #################
 
-        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict, 'maps_url': maps_url})
+        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict, 'url_auth':url_auth, 'maps_url': maps_url})
     
   else:
 
-    return render(request, 'buscador.html', {'artists': artists})
+    return render(request, 'buscador.html', {'artists': artists, 'url_auth':url_auth})
   
 
 def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):

@@ -1,0 +1,22 @@
+{% extends "buscador.html" %}
+
+{% block spotilog %}
+    <p id="username">{{ username }}</p>
+
+    <img id="userpic" src="{{ userpic }}">
+    
+{% endblock %}
+
+{% block userSpoti %}
+
+{% load static %}
+
+<form method="post" id="buscarTop">
+    {% csrf_token %}
+    <a href="#" id="submitTop"><img id="yourtop" src="{% static 'SpotiLog/img/spotify-top-10.png' %}"></a>
+</form>
+
+
+<script src="{% static 'SpotiLog/js/buscarTop.js' %}"></script>
+
+{% endblock %}

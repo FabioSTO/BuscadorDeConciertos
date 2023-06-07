@@ -1,0 +1,10 @@
+
+{% for artist in artists %}
+    <li>
+    {{ artist.name }}
+    <form id="delete-form-{{ artist.id }}" method="post" action="{% url 'delete_artist' artist.id %}">
+        {% csrf_token %}
+        <button type="submit" class="delete-button">Eliminar</button>
+    </form>
+    </li>
+{% endfor %}

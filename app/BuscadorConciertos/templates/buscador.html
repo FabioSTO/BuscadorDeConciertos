@@ -1,102 +1,116 @@
 <head>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'BuscadorConciertos/css/belleza.css' %}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'BuscadorConciertos/css/belleza.css' %}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
 
-  <section class="header">
-    <h1 id="title">Buscador de Conciertos</h1>
-    <img id="spoti" src="{% static 'BuscadorConciertos/img/spotilogo.png' %}">
-  </section>
+<section class="header">
+  <h1 id="title">Buscador de Conciertos</h1>
 
-  <div class="container" id="primer_container">
-      <div class="box">
-          <form method="post">
-              {% csrf_token %}
-              <label for="nombre">Búsqueda artistas:</label>
-              <input type="text" name="nombre" id="nombre">
-              <button type="submit" name="buscarArtista">Enviar</button>
-          </form>
-      </div>
-      
-      <img id="bb" src = "{% static 'BuscadorConciertos/img/bb.jpg' %}">
-      
-      <div class="box">
-          <form method="post">
-              {% csrf_token %}
-              <label for="ubicacion">Ubicación: </label>
-              <input type="text" name="ubicacion" id="ubicacion"><br>
+  {% if userpic %} <!-- Si está logueado en Spoti muestra otro header -->
+    {% block spotilog %}
+    {% endblock %}
+  {% else %}  <!-- Si no está logueado en Spoti muestra el logo para loguearse -->
+    <a href="{{ url_auth }}"><img id="spoti" src="{% static 'BuscadorConciertos/img/spotilogo.png' %}"></a> 
+  {% endif %}
 
-              <label for="pais">País búsqueda: </label>
-              <select name="pais" id="pais" required>
-                <option value="">Selecciona un país</option>
-                <option value="Spain">España</option>
-                <option value="United States Of America">United States</option>
-                <option value="France">Francia</option>
-                <option value="Italy">Italia</option>
-                <option value="Great Britain">Reino Unido</option>
-                </select><br>
+</section>
 
-              <label for="presupuesto">Presupuesto: </label>
-              <input type="range"  name="presupuesto" id="presupuesto" min="50" max="500" step="10" required><output id="valor"></output>
-              <label>€</label><br>
-
-              <label for="inicio">Fecha de inicio:</label>
-              <input type="date" id="inicio" name="inicio" value="2023-05-04" required><br>
-
-              <label for="fin">Fecha de fin:</label>
-              <input type="date" id="fin" name="fin" value="2024-01-01" required><br>
-
-              <button type="submit" name="iniciarBusqueda">Iniciar búsqueda</button>
-
-          </form>
-      </div>
-  </div>
-
-  <div id="spinnerContainer" class="spinner"></div>
-
-  <div class="container">
+<div class="container" id="primer_container">
     <div class="box">
-    <h1>Lista de artistas</h1>
-      <ul>
-        {% for artist in artists %}
-          <li>
-            {{ artist.name }}
-            <form id="delete-form-{{ artist.id }}" method="post" action="{% url 'delete_artist' artist.id %}">
-                {% csrf_token %}
-                <button type="submit" class="delete-button">Eliminar</button>
-            </form>
-          </li>
-        {% endfor %}
-      </ul>
+      <div class="ContBusq">
+        <form method="post" id="formArtista">
+            {% csrf_token %}
+            <input name="nombre" id="nombre" class="buscarArtista" type="text" placeholder="Buscar artista">
+            <button type="submit" name="buscarArtista">Buscar</button>
+        </form>
+      </div>
+    {% block userSpoti %}
+    {% endblock %}
+
     </div>
+    
+    <img id="bb" src = "{% static 'BuscadorConciertos/img/bb.jpeg' %}">
+    
     <div class="box">
-      <h1>Lista de conciertos (artista)</h1>
-        <div>
-          {{conciertos|safe}}
-        </div>
+        <form method="post">
+            {% csrf_token %}
+            <label for="ubicacion">Ubicación: </label>
+            <input type="text" name="ubicacion" id="ubicacion"><br>
 
-        <form method="post" action="{% url 'clean_database' %}">
-          {% csrf_token %}
-          <button type="submit">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
-      </form>
+            <label for="pais">País búsqueda: </label>
+            <select name="pais" id="pais" required>
+              <option value="">Selecciona un país</option>
+              <option value="Spain">España</option>
+              <option value="United States Of America">United States</option>
+              <option value="France">Francia</option>
+              <option value="Italy">Italia</option>
+              <option value="Great Britain">Reino Unido</option>
+              </select><br>
+
+            <label for="presupuesto">Presupuesto: </label>
+            <input type="range"  name="presupuesto" id="presupuesto" min="50" max="500" step="10" required><output id="valor"></output>
+            <label>€</label><br>
+
+            <label for="inicio">Fecha de inicio:</label>
+            <input type="date" id="inicio" name="inicio" value="2023-05-04" required><br>
+
+            <label for="fin">Fecha de fin:</label>
+            <input type="date" id="fin" name="fin" value="2024-01-01" required><br>
+
+            <button type="submit" name="iniciarBusqueda">Iniciar búsqueda</button>
+
+        </form>
     </div>
+</div>
+
+
+
+<div class="container">
+  <div class="box" id="artist-container">
+  <div id="overlay"></div>
+  <div id="spinner" class="spinner"></div>
+  <h1>Lista de artistas</h1>
+    <ul id="lista-artistas">
+      {% for artist in artists %}
+        <li>
+          {{ artist.name }}
+          <form id="delete-form-{{ artist.id }}" method="post" action="{% url 'delete_artist' artist.id %}">
+              {% csrf_token %}
+              <button type="submit" class="delete-button">Eliminar</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
   </div>
+  <div class="box">
+    <h1>Lista de conciertos (artista)</h1>
+      <div>
+        {{conciertos|safe}}
+      </div>
 
-  <section class="map">
-    <iframe 
-      width="100%"
-      height="100%"
-      frameborder="5" style="border:1"
-      referrerpolicy="no-referrer-when-downgrade"
-      src= "{{ maps_url }}"
-      allowfullscreen>
-    </iframe>
-  </section>
+      <form method="post" action="{% url 'clean_database' %}">
+        {% csrf_token %}
+        <button type="submit">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
+    </form>
+  </div>
+</div>
 
-  <script src="{% static 'BuscadorConciertos/js/presupuesto.js' %}"></script>
-  <script src="{% static 'BuscadorConciertos/js/forms.js' %}"></script>
+<section class="map">
+  <iframe 
+    width="100%"
+    height="100%"
+    frameborder="5" style="border:1"
+    referrerpolicy="no-referrer-when-downgrade"
+    src= "{{ maps_url }}"
+    allowfullscreen>
+  </iframe>
+</section>
+
+<script src="{% static 'BuscadorConciertos/js/presupuesto.js' %}"></script>
+<script src="{% static 'BuscadorConciertos/js/forms.js' %}"></script>
+<script src="{% static 'BuscadorConciertos/js/spotify.js' %}"></script>
 
 </body>
