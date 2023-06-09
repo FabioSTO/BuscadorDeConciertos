@@ -34,7 +34,7 @@ $('#formArtista').submit(function(event) {
 });
 
 function ensLista() {
-  var csrftoken = getCookie('csrftoken'); // Obtén el valor del token CSRF de la cookie
+  var csrftoken = getCookie('csrftoken'); // Obtiene el valor del token CSRF de la cookie
 
   $.ajax({
     url: '/showLista/',
@@ -44,12 +44,18 @@ function ensLista() {
       for (var i = 0; i < data.artists.length; i++) {
         var artist = data.artists[i];
         var listItem = '<li>' +
-          artist.name +
-          '<form id="delete-form-' + artist.id + '" method="post" action="/delete/' + artist.id + '/">' +
+          artist.name;
+
+        if (artist.is_spotified) {
+          listItem += '<img src="/static/BuscadorConciertos/img/spotilogo.png" alt="Logo de Spotify">';
+        }
+
+        listItem += '<form id="delete-form-' + artist.id + '" method="post" action="/delete/' + artist.id + '/">' +
           '<input type="hidden" name="csrfmiddlewaretoken" value="' + csrftoken + '">' +
           '<button type="submit" class="delete-button" id="boton_borrar">Eliminar</button>' +
           '</form>' +
           '</li>';
+
         $('#lista_artistas').append(listItem);
       }
     }

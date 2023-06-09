@@ -87,6 +87,9 @@
       {% for artist in artists %}
         <li>
           {{ artist.name }}
+          {% if artist.is_spotified %}
+            <img src="{% static 'BuscadorConciertos/img/spotilogo.png' %}" alt="Logo de Spotify">
+          {% endif %}
           <form id="delete-form-{{ artist.id }}" method="post" action="{% url 'delete_artist' artist_id=artist.id %}">
             {% csrf_token %}
             <button type="submit" class="delete-button" id="boton_borrar">Eliminar</button>

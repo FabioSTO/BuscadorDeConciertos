@@ -107,7 +107,8 @@ def showLista(request):
     for artist in artists:
         artist_list.append({
             'id': artist.id,
-            'name': artist.name
+            'name': artist.name,
+            'is_spotified': artist.is_spotified
         })
 
     response_data = {

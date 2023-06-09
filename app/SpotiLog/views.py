@@ -50,7 +50,7 @@ def get_top_artists(request):
 
     for artist in data['items']:
         i += 1
-        artist = Artist(name=artist['name'], artist_id=i)
+        artist = Artist(name=artist['name'], artist_id=i, is_spotified=True)
         artist.save()
 
 
