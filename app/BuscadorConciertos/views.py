@@ -117,15 +117,17 @@ def showLista(request):
 
     return HttpResponse(json.dumps(response_data), content_type='application/json')
 
+from django.db import IntegrityError
+
 def busqArtista(request):
-
     nombre = request.POST.get('nombre')
-
-    artist_id = (ticketmaster(request, nombre))
-
-    ticket_events(request, artist_id)
-
-    return HttpResponse() #Retorna una respuesta vacía
+    
+    try:
+        artist_id = ticketmaster(request, nombre)
+        ticket_events(request, artist_id)
+        return HttpResponse()  # Retorna una respuesta vacía
+    except IntegrityError:
+        return HttpResponse('Duplicado.')
 
 def buscador(request):
   artists = Artist.objects.all()

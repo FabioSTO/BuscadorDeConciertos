@@ -200,3 +200,8 @@ li form {
   z-index: 9998;
   opacity: 0.5;
 }
+
+.error-input {
+	border: 3px solid red !important;
+	color: red;
+}

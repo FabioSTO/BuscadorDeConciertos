@@ -28,10 +28,23 @@ $('#formArtista').submit(function(event) {
       $('#nombre').val('');
       $('#spinner').removeClass('show-spinner');
       $('#overlay').removeClass('overlay-show');
-      ensLista();
-  }
+      if (data.includes('Duplicado')) {
+        $('#nombre').addClass('error-input').attr('placeholder', '¡Artista duplicado!');
+      }
+      else {
+        $('#nombre').removeClass('error-input');
+        ensLista();}
+      
+    },
+  });
 });
+
+$(document).ready(function() {
+  $('#nombre').on('click', function() {
+    $(this).removeClass('error-input').attr('placeholder', 'Buscar artista');
+  });
 });
+
 
 function ensLista() {
   var csrftoken = getCookie('csrftoken'); // Obtiene el valor del token CSRF de la cookie
