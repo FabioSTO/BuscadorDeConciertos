@@ -1,19 +1,18 @@
 $(document).ready(function() {
-  $('.delete-button').click(function(event) {
-    event.preventDefault(); // para que no se envíe el form
-    var form = $(this).closest('form'); // encuentra el formulario más cercano al botón Eliminar
+  $(document).on('click', '.delete-button', function(event) {
+    event.preventDefault();
+    var form = $(this).closest('form');
     var url = form.attr('action'); 
     $.ajax({
       url: url,
-      method: 'POST', 
+      method: 'POST',
       data: form.serialize(),
       success: function(data) {
-        form.closest('li').remove(); // elimina el elemento <li> correspondiente al artista de la lista
+        form.closest('li').remove();
       }
     });
   });
 });
-
 
 $('#formArtista').submit(function(event) {
   event.preventDefault();
@@ -29,28 +28,53 @@ $('#formArtista').submit(function(event) {
       $('#nombre').val('');
       $('#spinner').removeClass('show-spinner');
       $('#overlay').removeClass('overlay-show');
-      showLista();
+      ensLista();
   }
 });
 });
 
+function ensLista() {
+  var csrftoken = getCookie('csrftoken'); // Obtén el valor del token CSRF de la cookie
+
+  $.ajax({
+    url: '/showLista/',
+    type: 'GET',
+    success: function(data) {
+      $('#lista_artistas').empty();
+      for (var i = 0; i < data.artists.length; i++) {
+        var artist = data.artists[i];
+        var listItem = '<li>' +
+          artist.name +
+          '<form id="delete-form-' + artist.id + '" method="post" action="/delete/' + artist.id + '/">' +
+          '<input type="hidden" name="csrfmiddlewaretoken" value="' + csrftoken + '">' +
+          '<button type="submit" class="delete-button" id="boton_borrar">Eliminar</button>' +
+          '</form>' +
+          '</li>';
+        $('#lista_artistas').append(listItem);
+      }
+    }
+  });
+}
+
+// Función auxiliar para obtener el valor del token CSRF de la cookie
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
 
 $('#formArtista').on('reset', function() {
   $('#nombre').val(''); // Vacía el campo de texto al restablecer el formulario
 });
-
-
-function showLista() {
-var url = '/showLista/';  // Reemplaza con la ruta correcta a tu vista que devuelve los artistas actualizados
-$.ajax({
-  url: url,
-  type: 'GET',
-  success: function(data) {
-    $('#lista_artistas').html(data);// Actualiza el contenido del ulcon los nuevos artistas
-  }
-});
-}
-
 
 var prevScrollpos = window.pageYOffset;
 var header = document.querySelector('.header');

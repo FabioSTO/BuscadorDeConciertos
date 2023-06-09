@@ -5,6 +5,7 @@ from .models import Artist, Concierto
 import pandas as pd
 from datetime import datetime
 from django.http import HttpResponse
+import json
 
 def get_distance(origen, destino):
     url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origen}&destinations={destino}&key={credentials.GOOGLE_CLIENT}"
@@ -91,10 +92,7 @@ def clean_database(request):
 
     return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
 
-from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt # TEMPORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL porque sino da error de csrf
-def delete_artist(request, artist_id):  # Aun asi la primera vez actualiza la pagina entera no se porque 
+def delete_artist(request, artist_id): 
     artists = Artist.objects.all()
     conciertos = Concierto.objects.all()
 
@@ -103,14 +101,20 @@ def delete_artist(request, artist_id):  # Aun asi la primera vez actualiza la pa
 
     return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
 
-from django.template.loader import render_to_string
-
-def showLista(request): #Se llama desde el forms.js para actualizar la lista que se ve sin actualizar la página
-
+def showLista(request):
     artists = Artist.objects.all()
+    artist_list = []
+    for artist in artists:
+        artist_list.append({
+            'id': artist.id,
+            'name': artist.name
+        })
 
-    html = render_to_string('lista_artistas.html', {'artists': artists})
-    return HttpResponse(html)
+    response_data = {
+        'artists': artist_list,
+    }
+
+    return HttpResponse(json.dumps(response_data), content_type='application/json')
 
 def busqArtista(request):
 
