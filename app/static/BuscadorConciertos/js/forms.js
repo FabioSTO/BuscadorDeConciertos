@@ -14,6 +14,7 @@ $(document).ready(function() {
   });
 });
 
+
 $('#formArtista').submit(function(event) {
   event.preventDefault();
   var url = '/busqArtista/';
@@ -25,30 +26,31 @@ $('#formArtista').submit(function(event) {
     data: $(this).serialize(),
     success: function(data) {
       console.log('Artista enviado');
-      showLista();
       $('#nombre').val('');
       $('#spinner').removeClass('show-spinner');
       $('#overlay').removeClass('overlay-show');
+      showLista();
   }
 });
 });
+
 
 $('#formArtista').on('reset', function() {
   $('#nombre').val(''); // Vacía el campo de texto al restablecer el formulario
 });
 
+
 function showLista() {
 var url = '/showLista/';  // Reemplaza con la ruta correcta a tu vista que devuelve los artistas actualizados
-
 $.ajax({
   url: url,
   type: 'GET',
   success: function(data) {
-    $('#lista-artistas').html(data);// Actualiza el contenido del ulcon los nuevos artistas
-  
+    $('#lista_artistas').html(data);// Actualiza el contenido del ulcon los nuevos artistas
   }
 });
 }
+
 
 var prevScrollpos = window.pageYOffset;
 var header = document.querySelector('.header');
