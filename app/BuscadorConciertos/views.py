@@ -157,24 +157,6 @@ def iniciarBusqueda(request):
 
     return HttpResponse(conciertos_json, content_type='application/json')
 
-
-def loadMap(request, conciertos_df):
-
-    waypoints = ""
-    origin = ""
-    destination = ""
-
-    for concierto in conciertos_df[1:-1]:
-            waypoints += concierto.place + "," + concierto.country + "|"
-    origin = conciertos_df[0].place + "," + conciertos_df[0].country
-    destination = conciertos_df[-1].place + "," + conciertos_df[-1].country
-    
-    ##### MAPS #####
-    
-    maps_url = f"https://www.google.com/maps/embed/v1/directions?key={credentials.GOOGLE_CLIENT}&origin={origin}&destination={destination}&waypoints={waypoints[:-1]}&units=metric&mode=driving"
-
-    return maps_url
-
 def buscador(request):
   artists = Artist.objects.all()
   conciertos = Concierto.objects.all().values() #Obtener valores de los conciertos
@@ -185,41 +167,7 @@ def buscador(request):
 
   url_auth = f'https://accounts.spotify.com/authorize?response_type=code&client_id={ credentials.SPOTIFY_CLIENT_ID }&redirect_uri=http://127.0.0.1:8000/SpotiLog/spotilog/&scope=user-top-read'
 
-  if request.method == 'POST':
-    
-    if 'iniciarBusqueda' in request.POST:
-        ubi = request.POST.get('ubicacion')
-        pais = request.POST.get('pais')
-        presupuesto = request.POST.get('presupuesto')
-        inicio = request.POST.get('inicio')
-        fin = request.POST.get('fin')
-
-        conciertos_df = aplicar_filtros(conciertos_df, pais, presupuesto, inicio, fin, ubi)
-        dataframe_selecciones = pd.DataFrame(conciertos_df)
-        conciertos_dict = dataframe_selecciones.to_html()
-
-        waypoints = ""
-        origin = ""
-        destination = ""
-
-        for concierto in conciertos_df[1:-1]:
-             waypoints += concierto.place + "," + concierto.country + "|"
-        origin = conciertos_df[0].place + "," + conciertos_df[0].country
-        destination = conciertos_df[-1].place + "," + conciertos_df[-1].country
-        
-        ##### MAPS #####
-        
-        maps_url = f"https://www.google.com/maps/embed/v1/directions?key={credentials.GOOGLE_CLIENT}&origin={origin}&destination={destination}&waypoints={waypoints[:-1]}&units=metric&mode=driving"
-        print(origin)
-        print(destination)
-        print(waypoints)
-        #################
-
-        return render(request, 'buscador.html', {'artists': artists, 'conciertos': conciertos_dict, 'url_auth':url_auth, 'maps_url': maps_url})
-    
-  else:
-
-    return render(request, 'buscador.html', {'artists': artists, 'url_auth':url_auth})
+  return render(request, 'buscador.html', {'artists': artists, 'url_auth':url_auth})
   
 
 def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):

@@ -63,23 +63,4 @@ def spotilog(request):
 
     username, userpic = get_user_id(request)
 
-  
-    if request.method == 'POST':
-        if 'buscarArtista' in request.POST:
-            nombre = request.POST.get('nombre')
-
-            artist_id = (views.ticketmaster(request, nombre))
-
-            views.ticket_events(request, artist_id)
-
-            return render(request, 'buscador.html', {'artists': artists, 'username':username, 'userpic':userpic})
-        
-        elif 'buscarTop' in request.POST:
-            
-            get_top_artists(request)
-
-            return render(request, 'webPage.html', {'artists': artists})
-    
-    else:
-
-        return render(request, 'spotilog.html', {'artists': artists, 'username':username, 'userpic':userpic})
+    return render(request, 'spotilog.html', {'artists': artists, 'username':username, 'userpic':userpic})
