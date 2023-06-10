@@ -4,6 +4,7 @@ from django.shortcuts import render
 from BuscadorConciertos import views
 from .models import Artist, Concierto
 from . import credentials
+import json
 
 # Create your views here.
 
@@ -56,11 +57,30 @@ def get_top_artists(request):
 
     return HttpResponse(status=204)
 
+def get_playlists(request):
+
+    code = credentials.SPOTIFY_CODE
+
+    url = 'https://api.spotify.com/v1/me/playlists'
+    headers = {'Authorization': 'Bearer ' + credentials.SPOTIFY_TOKEN}
+    response = requests.get(url, headers=headers)
+
+    arr_playlists = []
+
+    # Convierte a JSON
+    data = response.json()
+
+    for playlist in data['items']:
+        arr_playlists.append(playlist['name'])
+
+    return HttpResponse(json.dumps(arr_playlists), content_type='application/json')
+
 def spotilog(request):
     artists = Artist.objects.all()
     credentials.SPOTIFY_CODE = request.GET.get('code')
     credentials.SPOTIFY_TOKEN = get_Spotoken(credentials.SPOTIFY_CODE)
 
     username, userpic = get_user_id(request)
+    playlists = get_playlists(request)
 
-    return render(request, 'spotilog.html', {'artists': artists, 'username':username, 'userpic':userpic})
+    return render(request, 'spotilog.html', {'artists': artists, 'username':username, 'userpic':userpic, 'playlists':playlists})

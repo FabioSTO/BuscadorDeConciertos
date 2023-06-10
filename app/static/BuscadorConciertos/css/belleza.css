@@ -18,7 +18,23 @@ body {
 	z-index: 9999;
 }
 
+#yourcontainer {
+	display: flex;
+}
+
+#yourcontainer form {
+	margin-right: 20px;
+  }
+
 #yourtop {
+	height: 300px;
+	width: 300px;
+	border-radius: 10px;
+	border: solid rgb(89, 255, 47) 2px;
+	box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
+#yourplaylist {
 	height: 300px;
 	width: 300px;
 	border-radius: 10px;
@@ -261,4 +277,10 @@ background-color: #f9f9f9;
 
 #tabla_conciertos tr:hover {
 background-color: #ddd;
+}
+
+#playlist_select {
+	display: none;
+	font-size: 20px;
+	
 }

@@ -11,12 +11,22 @@
 
 {% load static %}
 
-<form method="post" id="buscarTop">
-    {% csrf_token %}
-    <a href="#" id="submitTop"><img id="yourtop" src="{% static 'SpotiLog/img/spotify-top-10.png' %}"></a>
-</form>
+<div id="yourcontainer">
+    <form method="post" id="buscarTop">
+        {% csrf_token %}
+        <a href="#" id="submitTop"><img id="yourtop" src="{% static 'SpotiLog/img/spotify-top-10.png' %}"></a>
+    </form>
 
+    <form method="post" id="buscarPlaylist">
+        {% csrf_token %}
+        <a href="##" id="submitPlaylist"><img id="yourplaylist" src="{% static 'SpotiLog/img/topgenres.png' %}"></a>
+    </form>
+</div>
+
+<select id="playlist_select"></select>
+  
 
 <script src="{% static 'SpotiLog/js/buscarTop.js' %}"></script>
+<script src="{% static 'SpotiLog/js/buscarPlaylist.js' %}"></script>
 
 {% endblock %}
