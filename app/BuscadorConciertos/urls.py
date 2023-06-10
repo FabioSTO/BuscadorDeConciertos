@@ -10,4 +10,5 @@ urlpatterns = [
     path('busqArtista/', views.busqArtista, name='busqArtista'),
     path('showLista/', views.showLista, name='showLista'),
     path('iniciarBusqueda/', views.iniciarBusqueda, name='iniciarBusqueda'),
+    path('getTitulares/', views.get_titulares, name='get_titulares')
 ]

@@ -118,8 +118,10 @@ $(document).ready(function() {
   $('#filtros').submit(function(event) {
       event.preventDefault();
       var url = '/iniciarBusqueda/';
-      $('#spinner2').addClass('show-spinner2');
-      $('#overlay2').addClass('overlay-show2');
+      //$('#spinner2').addClass('show-spinner2');
+      //$('#overlay2').addClass('overlay-show2');
+      $('#titulares').addClass('titulares-show');
+      obtenerTitulares();
       $.ajax({
         url: url,
         type: 'POST',
@@ -131,12 +133,31 @@ $(document).ready(function() {
           loadMap(JSON.stringify(data));// Lo necesito para que me funcione el JSON.parse
           setTimeout(function() {
             $('#spinner2').removeClass('show-spinner2');
-            $('#overlay2').removeClass('overlay-show2');  // Para darle tiempo a cargar el mapa
+            $('#overlay2').removeClass('overlay-show2');
+            $('#titulares').removeClass('titulares-show');  // Para darle tiempo a cargar el mapa
           }, 2000);
       }
     });
   });
   });
+
+  function obtenerTitulares() {
+    $.ajax({
+      url: '/getTitulares/',
+      type: 'GET',
+      success: function(data) {
+        console.log(data);
+        var titularesDiv = $('#titulares');
+        titularesDiv.empty();
+        data.forEach(function(titular) {
+          titularesDiv.append('<p>' + titular + '</p>');
+        });
+
+        //$('#spinner2').removeClass('show-spinner2');
+        //$('#overlay2').removeClass('overlay-show2');
+      }
+    });
+  }
   
   function loadMap(conciertosJson) {
     var conciertos = JSON.parse(conciertosJson);
@@ -184,4 +205,4 @@ $(document).ready(function() {
     diccionarioDiv.html(conciertosHtml);
   }
   
-  
+

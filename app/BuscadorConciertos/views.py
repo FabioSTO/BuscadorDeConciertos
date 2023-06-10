@@ -1,3 +1,6 @@
+import os
+import subprocess
+import unicodedata
 import requests
 from . import credentials
 from django.shortcuts import render, redirect, reverse
@@ -6,6 +9,24 @@ import pandas as pd
 from datetime import datetime
 from django.http import HttpResponse
 import json
+
+
+def get_titulares(request):
+    current_dir = os.getcwd()
+    scrapy_dir = os.path.join(current_dir, 'scrapy_app/billboard')
+    os.chdir(scrapy_dir)
+    subprocess.run(['scrapy', 'crawl', 'billboard', '-o', 'output.json'])
+
+    with open('output.json') as json_file:
+        data = json.load(json_file)
+        titulares = [unicodedata.normalize('NFKD', item['title']).replace('\xa0', ' ') for item in data]
+
+    os.chdir(current_dir)
+    print(titulares)
+    os.remove(os.path.join(scrapy_dir, 'output.json'))
+    
+    return HttpResponse(json.dumps(titulares), content_type='application/json')
+
 
 def get_distance(origen, destino):
     url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origen}&destinations={destino}&key={credentials.GOOGLE_CLIENT}"
