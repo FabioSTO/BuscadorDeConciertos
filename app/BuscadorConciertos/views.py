@@ -38,6 +38,10 @@ def get_attraction_id(artist_name):
 
     except KeyError:
         artist = None
+
+    except AttributeError:
+        artist = None
+        return None
     
     return artist.id  #El id dentro de la base de usuario
 
@@ -128,6 +132,8 @@ def busqArtista(request):
         return HttpResponse()  # Retorna una respuesta vacía
     except IntegrityError:
         return HttpResponse('Duplicado.')
+    except AttributeError:
+        return HttpResponse('Inválido.')
 
 def buscador(request):
   artists = Artist.objects.all()

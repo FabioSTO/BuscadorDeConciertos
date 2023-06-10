@@ -31,11 +31,12 @@ $('#formArtista').submit(function(event) {
       if (data.includes('Duplicado')) {
         $('#nombre').addClass('error-input').attr('placeholder', '¡Artista duplicado!');
       }
-      else {
+      else if (data.includes('Inválido')) {
+        $('#nombre').addClass('error-input').attr('placeholder', '¡Artista inválido!');
+      } else {
         $('#nombre').removeClass('error-input');
         ensLista();}
-      
-    },
+      } 
   });
 });
 
