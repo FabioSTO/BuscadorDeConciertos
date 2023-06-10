@@ -17,7 +17,7 @@ $(document).ready(function() {
 $('#formArtista').submit(function(event) {
   event.preventDefault();
   var url = '/busqArtista/';
-  $('#spinner').addClass('show-spinner');
+  $('#spinner1').addClass('show-spinner1');
   $('#overlay').addClass('overlay-show');
   $.ajax({
     url: url,
@@ -26,7 +26,7 @@ $('#formArtista').submit(function(event) {
     success: function(data) {
       console.log('Artista enviado');
       $('#nombre').val('');
-      $('#spinner').removeClass('show-spinner');
+      $('#spinner1').removeClass('show-spinner1');
       $('#overlay').removeClass('overlay-show');
       if (data.includes('Duplicado')) {
         $('#nombre').addClass('error-input').attr('placeholder', '¡Artista duplicado!');
@@ -45,7 +45,6 @@ $(document).ready(function() {
     $(this).removeClass('error-input').attr('placeholder', 'Buscar artista');
   });
 });
-
 
 function ensLista() {
   var csrftoken = getCookie('csrftoken'); // Obtiene el valor del token CSRF de la cookie
@@ -113,5 +112,76 @@ prevScrollpos = currentScrollPos;
 
 
 
+// FOrmulario de conciertos
 
+$(document).ready(function() {
+  $('#filtros').submit(function(event) {
+      event.preventDefault();
+      var url = '/iniciarBusqueda/';
+      $('#spinner2').addClass('show-spinner2');
+      $('#overlay2').addClass('overlay-show2');
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(data) {
+          console.log(data);
+          console.log('Filtrado');
+          showConciertos(JSON.stringify(data));  // Lo necesito para que me funcione el JSON.parse
+          loadMap(JSON.stringify(data));// Lo necesito para que me funcione el JSON.parse
+          setTimeout(function() {
+            $('#spinner2').removeClass('show-spinner2');
+            $('#overlay2').removeClass('overlay-show2');  // Para darle tiempo a cargar el mapa
+          }, 2000);
+      }
+    });
+  });
+  });
+  
+  function loadMap(conciertosJson) {
+    var conciertos = JSON.parse(conciertosJson);
+  
+    var waypoints = "";
+    var origin = "";
+    var destination = "";
+  
+    for (var i = 1; i < conciertos.length - 1; i++) {
+      waypoints += conciertos[i].place + "," + conciertos[i].country + "|";
+    }
+    origin = conciertos[0].place + "," + conciertos[0].country;
+    destination = conciertos[conciertos.length - 1].place + "," + conciertos[conciertos.length - 1].country;
+
+    cred = 'AIzaSyC4GYQA9Yk5TpyJKIb4ATbasxQ9TIcpiaw'
+  
+    var maps_url = "https://www.google.com/maps/embed/v1/directions?key=" + cred + "&origin=" + origin + "&destination=" + destination + "&waypoints=" + waypoints.slice(0, -1) + "&units=metric&mode=driving";
+  
+    $('.map iframe').attr('src', maps_url);
+  }
+
+  function showConciertos(conciertosJson) {
+    //console.log(conciertosJson);
+    var diccionarioDiv = $('#diccionario');
+    
+    // Parseamos el JSON
+    var conciertos = JSON.parse(conciertosJson);
+  
+    
+    if (conciertos.length === 0) { // Si el diccionario está vacío
+      diccionarioDiv.html('<p>No se encontraron conciertos.</p>');
+      return;
+    }
+  
+    var conciertosHtml = '<table id="tabla_conciertos"><tr><th>Nombre</th><th>Lugar</th><th>Fecha</th><th>Distancia</th><th>Precio</th></tr>'; // Para el enacbezado
+  
+  conciertos.forEach(function(concierto) {
+    var fecha = new Date(concierto.date); // Convertir a fecha normal
+    var fechaNormal = fecha.toDateString();
+    var distkm = Math.round(concierto.distance/1000)
+    conciertosHtml += '<tr><td>' + concierto.name + '</td><td>' + concierto.place + '</td><td>' + fechaNormal + '</td><td>' + distkm + " km" + '</td><td>' + " $" + concierto.price + '</td></tr>';
+  });
+  
+  conciertosHtml += '</table>';
+    diccionarioDiv.html(conciertosHtml);
+  }
+  
   

@@ -80,9 +80,10 @@
 
 
 <div class="container">
+  <div id="spinner2" class="spinner"></div>
   <div class="box" id="artist-container">
   <div id="overlay"></div>
-  <div id="spinner" class="spinner"></div>
+  <div id="spinner1" class="spinner"></div>
   <h1>Lista de artistas</h1>
     <ul id="lista_artistas">
       {% for artist in artists %}
@@ -99,11 +100,10 @@
       {% endfor %}
     </ul>
   </div>
-  <div class="box">
+  <div id="concert-container" class="box">
+    <div id="overlay2"></div>
     <h1>Lista de conciertos (artista)</h1>
-      <div>
-        {{conciertos|safe}}
-      </div>
+      <div id="diccionario"></div>
 
       <form method="post" action="{% url 'clean_database' %}">
         {% csrf_token %}
@@ -118,7 +118,7 @@
     height="100%"
     frameborder="5" style="border:1"
     referrerpolicy="no-referrer-when-downgrade"
-    src= "{{ maps_url }}"
+    src= ""
     allowfullscreen>
   </iframe>
 </section>

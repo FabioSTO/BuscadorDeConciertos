@@ -178,13 +178,22 @@ li form {
 	}
 }
 
-.show-spinner {
+.show-spinner1 {
 	display: block;
 	position:absolute;
 	top: 8%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-  }
+}
+
+.show-spinner2 {
+	display: block;
+	position:absolute;
+	top: 80%;
+	left: 75%;
+	transform: translate(-50%, -50%);
+	z-index: 9998;
+}
 
 #artist-container {
 	position: relative;
@@ -197,11 +206,48 @@ li form {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Ajusta el valor al nivel de opacidad deseado */
-  z-index: 9998;
+  z-index: 9997;
   opacity: 0.5;
 }
+
+#concert-container {
+	position: relative;
+}
+
+.overlay-show2{
+	position:absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5); /* Ajusta el valor al nivel de opacidad deseado */
+	z-index: 9997;
+	opacity: 0.5;
+  }
 
 .error-input {
 	border: 3px solid red !important;
 	color: red;
+}
+
+#tabla_conciertos {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#tabla_conciertos th, #tabla_conciertos td {
+border: 1px solid #ddd;
+padding: 8px;
+}
+
+#tabla_conciertos th {
+background-color: #f2f2f2;
+}
+
+#tabla_conciertos tr:nth-child(even) { /*Para que los pares sean más claritos que los impares*/
+background-color: #f9f9f9;
+}
+
+#tabla_conciertos tr:hover {
+background-color: #ddd;
 }

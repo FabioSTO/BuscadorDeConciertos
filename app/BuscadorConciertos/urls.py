@@ -9,4 +9,6 @@ urlpatterns = [
     path('clean/', clean_database, name='clean_database'),
     path('busqArtista/', views.busqArtista, name='busqArtista'),
     path('showLista/', views.showLista, name='showLista'),
+    path('iniciarBusqueda/', views.iniciarBusqueda, name='iniciarBusqueda'),
+    path('loadMap/', views.loadMap, name='loadMap'),
 ]

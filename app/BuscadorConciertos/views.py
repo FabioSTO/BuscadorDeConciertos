@@ -13,7 +13,11 @@ def get_distance(origen, destino):
     response = requests.get(url)
     json_response = response.json()
 
-    distancia_metros = json_response["rows"][0]["elements"][0]["distance"]["value"]
+    try:
+        distancia_metros = json_response["rows"][0]["elements"][0]["distance"]["value"]
+    except KeyError:
+        distancia_metros = 0
+
     return distancia_metros
 
 
@@ -134,6 +138,42 @@ def busqArtista(request):
         return HttpResponse('Duplicado.')
     except AttributeError:
         return HttpResponse('Inválido.')
+
+def iniciarBusqueda(request):
+    conciertos = Concierto.objects.all().values() #Obtener valores de los conciertos
+    conciertos_df = pd.DataFrame(conciertos) #Importamos a un dataframe de pandas
+
+    ubi = request.POST.get('ubicacion')
+    pais = request.POST.get('pais')
+    presupuesto = request.POST.get('presupuesto')
+    inicio = request.POST.get('inicio')
+    fin = request.POST.get('fin')
+
+    conciertos_df = aplicar_filtros(conciertos_df, pais, presupuesto, inicio, fin, ubi)
+    dataframe_selecciones = pd.DataFrame(conciertos_df)
+    conciertos_json = dataframe_selecciones.to_json(orient='records')
+
+    print(conciertos_json)
+
+    return HttpResponse(conciertos_json, content_type='application/json')
+
+
+def loadMap(request, conciertos_df):
+
+    waypoints = ""
+    origin = ""
+    destination = ""
+
+    for concierto in conciertos_df[1:-1]:
+            waypoints += concierto.place + "," + concierto.country + "|"
+    origin = conciertos_df[0].place + "," + conciertos_df[0].country
+    destination = conciertos_df[-1].place + "," + conciertos_df[-1].country
+    
+    ##### MAPS #####
+    
+    maps_url = f"https://www.google.com/maps/embed/v1/directions?key={credentials.GOOGLE_CLIENT}&origin={origin}&destination={destination}&waypoints={waypoints[:-1]}&units=metric&mode=driving"
+
+    return maps_url
 
 def buscador(request):
   artists = Artist.objects.all()
