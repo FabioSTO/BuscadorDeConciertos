@@ -9,7 +9,7 @@ class BillboardSpider(scrapy.Spider):
         titles = response.css('h3.c-title a::text').extract()
         titles = [title.strip() for title in titles if title.strip()]
         
-        for title in titles[:5]:
+        for title in titles[:10]:
             yield {
                 'title': title
             }

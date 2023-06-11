@@ -243,13 +243,21 @@ li form {
 
 .titulares {
 	display: none;
-	margin-bottom: 20px;
-	font-size: 20px;
-	background-color: green; 
+	position: absolute;
+	width: calc(100% - 50px);
+	font-size: 30px;
+	margin-left: 10px;
+	background-color: #333333;
+	color: #ddd;
+	text-align: center;
 }
 
 .titulares-show {
-	display: block
+	display: block;
+}
+
+.botonVaciar-noShow {
+	display: none;
 }
 
 .error-input {

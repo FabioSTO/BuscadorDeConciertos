@@ -118,9 +118,9 @@ $(document).ready(function() {
   $('#filtros').submit(function(event) {
       event.preventDefault();
       var url = '/iniciarBusqueda/';
-      //$('#spinner2').addClass('show-spinner2');
-      //$('#overlay2').addClass('overlay-show2');
-      $('#titulares').addClass('titulares-show');
+      $('#overlay2').addClass('overlay-show2');
+      $('#spinner2').addClass('show-spinner2');
+      $('#borrar_base').addClass('botonVaciar-noShow');
       obtenerTitulares();
       $.ajax({
         url: url,
@@ -135,6 +135,7 @@ $(document).ready(function() {
             $('#spinner2').removeClass('show-spinner2');
             $('#overlay2').removeClass('overlay-show2');
             $('#titulares').removeClass('titulares-show');  // Para darle tiempo a cargar el mapa
+            $('#borrar_base').removeClass('botonVaciar-noShow');
           }, 2000);
       }
     });
@@ -142,6 +143,7 @@ $(document).ready(function() {
   });
 
   function obtenerTitulares() {
+    $('#titulares').addClass('titulares-show');
     $.ajax({
       url: '/getTitulares/',
       type: 'GET',
@@ -149,12 +151,12 @@ $(document).ready(function() {
         console.log(data);
         var titularesDiv = $('#titulares');
         titularesDiv.empty();
-        data.forEach(function(titular) {
-          titularesDiv.append('<p>' + titular + '</p>');
-        });
-
-        //$('#spinner2').removeClass('show-spinner2');
-        //$('#overlay2').removeClass('overlay-show2');
+        var randomIndex = Math.floor(Math.random() * data.length);
+        var titularAleatorio = data[randomIndex];
+        titularesDiv.append('<p>' + titularAleatorio + '</p>')
+        //data.forEach(function(titular) {
+        //  titularesDiv.append('<p>' + titular + '</p>');
+        //});
       }
     });
   }
