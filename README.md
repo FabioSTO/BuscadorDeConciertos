@@ -10,9 +10,9 @@
 | Semana 2| 16 horas  |  4 horas  | 13 horas  |
 | Semana 3| 4 horas   | 12 horas  |  4 horas  |
 | Semana 4| 4 horas   |  3 horas  |  3 horas  |
-| Semana 5| 4 horas   |           |           |
-| Semana 6| 20 horas  |           |           |
-| Semana 7| 50 horas  |           |           |
+| Semana 5| 4 horas   |           |  3 horas  |
+| Semana 6| 20 horas  |           |  12 horas |
+| Semana 7| 50 horas  |           |  32 horas |
 
 **__Semana 1 es la semana del 24/04/2023__*
 
