@@ -120,7 +120,8 @@ $(document).ready(function() {
       var url = '/iniciarBusqueda/';
       $('#overlay2').addClass('overlay-show2');
       $('#spinner2').addClass('show-spinner2');
-      $('#borrar_base').addClass('botonVaciar-noShow');
+      $('#borrar_base').addClass('noShow');
+      $('#diccionario').addClass('noShow');
       obtenerTitulares();
       $.ajax({
         url: url,
@@ -135,7 +136,8 @@ $(document).ready(function() {
             $('#spinner2').removeClass('show-spinner2');
             $('#overlay2').removeClass('overlay-show2');
             $('#titulares').removeClass('titulares-show');  // Para darle tiempo a cargar el mapa
-            $('#borrar_base').removeClass('botonVaciar-noShow');
+            $('#borrar_base').removeClass('noShow');
+            $('#diccionario').removeClass('noShow');
           }, 2000);
       }
     });
@@ -174,6 +176,7 @@ $(document).ready(function() {
     origin = conciertos[0].place + "," + conciertos[0].country;
     destination = conciertos[conciertos.length - 1].place + "," + conciertos[conciertos.length - 1].country;
 
+    console.log(waypoints);
     cred = 'AIzaSyC4GYQA9Yk5TpyJKIb4ATbasxQ9TIcpiaw'
   
     var maps_url = "https://www.google.com/maps/embed/v1/directions?key=" + cred + "&origin=" + origin + "&destination=" + destination + "&waypoints=" + waypoints.slice(0, -1) + "&units=metric&mode=driving";
