@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 import requests
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from BuscadorConciertos import views
 from .models import Artist, Concierto, Playlist
 from . import credentials
@@ -51,9 +51,13 @@ def get_top_artists(request):
     i=1
 
     for artist in data['items']:
-        i += 1
-        artist = Artist(name=artist['name'], artist_id=i, is_spotified=True)
-        artist.save()
+        try:
+            i += 1
+            artist = Artist(name=artist['name'], artist_id=i, is_spotified=True)
+            artist.save()
+
+        except IntegrityError: # Si viola la unicidad del campo artista (se repite)
+                continue
 
 
     return HttpResponse(status=204)
@@ -113,8 +117,15 @@ def get_artists_from_playlist(request):
 
 def spotilog(request):
     artists = Artist.objects.all()
-    credentials.SPOTIFY_CODE = request.GET.get('code')
-    credentials.SPOTIFY_TOKEN = get_Spotoken(credentials.SPOTIFY_CODE)
+
+    try:
+        if credentials.SPOTIFY_CODE is None or credentials.SPOTIFY_TOKEN is None: # Para evitar el KeyError al recargar la página estando logueado
+            credentials.SPOTIFY_CODE = request.GET.get('code')
+            credentials.SPOTIFY_TOKEN = get_Spotoken(credentials.SPOTIFY_CODE)
+    except KeyError:                                                              # En caso de que caduque el token, para que te redirija ala autorización otra vez
+        url_auth = f'https://accounts.spotify.com/authorize?response_type=code&client_id={ credentials.SPOTIFY_CLIENT_ID }&redirect_uri=http://127.0.0.1:8000/SpotiLog/spotilog/&scope=user-top-read playlist-read-private'
+        return redirect(url_auth)
+
 
     username, userpic = get_user_id(request)
     playlists = get_playlists(request)

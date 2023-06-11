@@ -103,3 +103,5 @@ function ensLista() {
     }
     return cookieValue;
   }
+
+  
