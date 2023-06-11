@@ -246,3 +246,52 @@ def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
             primerdia = df.iloc[0]['date']  #Nuevo primer dia de nueva semana
 
     return selecciones
+
+
+
+def calc_route(stops):
+    batches = []
+    items_per_batch = 8  # Google API max = 10 - 1 start, 1 stop, and 8 waypoints
+    items_counter = 0
+    waypts_exist = len(stops) > 0
+
+    while waypts_exist:
+        sub_batch = []
+        sub_items_counter = 0
+
+        for j in range(items_counter, len(stops)):
+            sub_items_counter += 1
+            sub_batch.append({
+                'location': 2,
+                'stopover': True
+            })
+            if sub_items_counter == items_per_batch:
+                break
+
+        items_counter += sub_items_counter
+        batches.append(sub_batch)
+        waypts_exist = items_counter < len(stops)
+        # If it runs again there are still points. Minus 1 before continuing to
+        # start up with end of previous tour leg
+        items_counter -= 1
+
+    combined_results = []
+    unsorted_results = [{}]  # to hold the counter and the results themselves as they come back, to later sort
+    directions_results_returned = 0
+
+    for k in range(len(batches)):
+        last_index = len(batches[k]) - 1
+        start = batches[k][0]['location']
+        end = batches[k][last_index]['location']
+
+        # trim first and last entry from array
+        waypts = batches[k]
+        waypts.pop(0)
+        waypts.pop(len(waypts) - 1)
+
+        request = {
+            'origin': start,
+            'destination': end,
+            'waypoints': waypts,
+            'travelMode': 'DRIVING'
+        }

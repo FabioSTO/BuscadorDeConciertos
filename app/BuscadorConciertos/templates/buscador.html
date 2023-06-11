@@ -2,6 +2,7 @@
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'BuscadorConciertos/css/belleza.css' %}">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4GYQA9Yk5TpyJKIb4ATbasxQ9TIcpiaw"></script>
 </head>
 
 <body>
@@ -112,6 +113,11 @@
         <button type="submit" id="borrar_base">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
     </form>
   </div>
+  
+</div>
+
+
+<div class="map" id="mapmapmap">
 </div>
 
 <section class="map">
@@ -125,9 +131,12 @@
   </iframe>
 </section>
 
+
+
 <script src="{% static 'BuscadorConciertos/js/presupuesto.js' %}"></script>
 <script src="{% static 'BuscadorConciertos/js/forms.js' %}"></script>
 <script src="{% static 'BuscadorConciertos/js/spotify.js' %}"></script>
+<script src="{% static 'BuscadorConciertos/js/test2.js' %}"></script>
 
 
 </body>
