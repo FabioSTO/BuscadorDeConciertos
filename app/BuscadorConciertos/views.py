@@ -186,7 +186,7 @@ def buscador(request):
   #Transformas el df a formato html para luego pasarlo al render
   #conciertos_dict = conciertos_df.to_html()
 
-  url_auth = f'https://accounts.spotify.com/authorize?response_type=code&client_id={ credentials.SPOTIFY_CLIENT_ID }&redirect_uri=http://127.0.0.1:8000/SpotiLog/spotilog/&scope=user-top-read'
+  url_auth = f'https://accounts.spotify.com/authorize?response_type=code&client_id={ credentials.SPOTIFY_CLIENT_ID }&redirect_uri=http://127.0.0.1:8000/SpotiLog/spotilog/&scope=user-top-read playlist-read-private'
 
   return render(request, 'buscador.html', {'artists': artists, 'url_auth':url_auth})
   

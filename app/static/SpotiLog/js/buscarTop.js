@@ -7,14 +7,14 @@ $(document).ready(function() {
     $('#buscarTop').on('submit', function(e) {
         e.preventDefault();
         var url = '/SpotiLog/get_top_artists/';
-        $('#spinner').addClass('show-spinner');
+        $('#spinner1').addClass('show-spinner1');
         $('#overlay').addClass('overlay-show');
         $.ajax({
             url: url,
             type: 'POST',
             data: $(this).serialize(),
             success: function() {
-                $('#spinner').removeClass('show-spinner');
+                $('#spinner1').removeClass('show-spinner1');
                 $('#overlay').removeClass('overlay-show');
                 ensLista();
                 console.log('Artistas guardados.');
