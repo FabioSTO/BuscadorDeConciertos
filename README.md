@@ -64,4 +64,15 @@
 ![Ejemplo configuración](/app/static/BuscadorConciertos/img/ej.png)
 	 
 
+### Riesgos con los tests:
 
++ El test que comprueba la llamada a la API de Google Maps para obtener la distancia entre dos puntos es posible que falle. Esto es debido a que calcula la ruta en tiempo real y por lo tanto dependiendo del estado de las carreteras puede variar la distancia.
+
++ Lo anterior es tambien posible que suceda con los eventos de Ticketmaster, ya que si se diera el caso de que justo los eventos testeados desaparecen de la web de Ticketmaster, el test fallaría.
+
++ Para los tests de Spotify hemos decidido realizarlos de forma 'simulada' para evitar problemas con el ACCESS_TOKEN, ya que no es permanente y por lo tanto deja de ser usable pasado un tiempo.
+
+
+## Notas adicionales
+
++ El código empleado para map.js se ha modificado del existente en el blog https://lemonharpy.wordpress.com/2011/12/15/working-around-8-waypoint-limit-in-google-maps-directions-api/

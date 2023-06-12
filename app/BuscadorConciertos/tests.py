@@ -87,20 +87,11 @@ class ViewsTestCase(TestCase):
         self.assertEquals(data['_embedded']['events'][0]['priceRanges'][0]['min'], 50.5)
 
     def test_get_distance(self):
-        origen = 'Madrid'
-        destino = 'Barcelona'
-
-        origen2 = 'Chicago'
-        destino2 = 'Boston'
+        origen = 'Chicago'
+        destino = 'Boston'
 
         url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origen}&destinations={destino}&key={credentials.GOOGLE_CLIENT}"
         response = requests.get(url)
         data = response.json()
 
-        url2 = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origen2}&destinations={destino2}&key={credentials.GOOGLE_CLIENT}"
-        response2 = requests.get(url2)
-        data2 = response2.json()
-        print(data2)
-
-        self.assertEquals(data['rows'][0]['elements'][0]['distance']['value'], 626061)
-        self.assertEquals(data2['rows'][0]['elements'][0]['distance']['value'], 1582651)
+        self.assertEquals(data['rows'][0]['elements'][0]['distance']['value'], 1582651)
