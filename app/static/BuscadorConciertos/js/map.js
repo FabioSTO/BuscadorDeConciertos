@@ -1,6 +1,6 @@
 $(function() {
     $('#filtros').submit(async function(event) {
-    var cities = ["Landover","Columbus","Seattle","Las Vegas","Chicago","Miami"]
+    var cities = ["Mainsfield"]
 
     var map = new window.google.maps.Map(document.getElementById("mapmapmap"));
 
@@ -12,11 +12,12 @@ $(function() {
         type: 'POST',
         data: $(this).serialize(),
         success: async function(data) {
+          cities2.push(document.getElementById("ubicacion").value + "," + document.getElementById("pais").value)
           for (var item = 0; item < data.length; item++){
-            cities2.push(data[item].place);
+            cities2.push(data[item].place+","+data[item].country);
           }
         var stops2 = await geocodeCities(cities2);
-        console.log(stops2);
+        console.log(cities2);
     var stops =await geocodeCities(cities);
     // new up complex objects before passing them around
     if (stops2.length > 0){
@@ -37,7 +38,7 @@ $(function() {
 });
 
 function Tour_startUp(stops) {
-    if (!window.tour) window.tour = {
+  window.tour = {
         updatestops: function (newstops) {
             stops = newstops;
         },
