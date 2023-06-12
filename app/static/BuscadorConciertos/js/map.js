@@ -1,37 +1,33 @@
 $(function() {
     $('#filtros').submit(async function(event) {
-    var cities = ["Mainsfield"]
 
-    var map = new window.google.maps.Map(document.getElementById("mapmapmap"));
+    var map = new window.google.maps.Map(document.getElementById("map"));
 
-    //////////////////////////////////
     var url = '/iniciarBusqueda/';
-    var cities2 = [];
+    var cities = [];
     $.ajax({
         url: url,
         type: 'POST',
         data: $(this).serialize(),
         success: async function(data) {
-          cities2.push(document.getElementById("ubicacion").value + "," + document.getElementById("pais").value)
+          cities.push(document.getElementById("ubicacion").value + "," + document.getElementById("pais").value)
           for (var item = 0; item < data.length; item++){
-            cities2.push(data[item].place+","+data[item].country);
+            cities.push(data[item].place+","+data[item].country);
           }
-        var stops2 = await geocodeCities(cities2);
-        console.log(cities2);
-    var stops =await geocodeCities(cities);
-    // new up complex objects before passing them around
-    if (stops2.length > 0){
-        var directionsDisplay = new window.google.maps.DirectionsRenderer();
-        var directionsService = new window.google.maps.DirectionsService();
-        Tour_startUp(stops2);
-        window.tour.loadMap(map, directionsDisplay);
-        window.tour.fitBounds(map);
-        if (stops2.length > 1)
+
+        var stops = await geocodeCities(cities);
+
+        if (stops.length > 0){
+          var directionsDisplay = new window.google.maps.DirectionsRenderer();
+          var directionsService = new window.google.maps.DirectionsService();
+          Tour_startUp(stops);
+          window.tour.loadMap(map, directionsDisplay);
+          window.tour.fitBounds(map);
+          if (stops.length > 1)
             window.tour.calcRoute(directionsService, directionsDisplay);
-      }
-    }
+        }
+      } 
     });
-    /////////////////////////////////////
     
     
     });
@@ -90,7 +86,6 @@ function Tour_startUp(stops) {
                 // start up with end of previous tour leg
                 itemsCounter--;
             }
-            console.log(batches);
             // now we should have a 2 dimensional array with a list of a list of waypoints
             var combinedResults;
             var unsortedResults = [{}]; // to hold the counter and the results themselves as they come back, to later sort

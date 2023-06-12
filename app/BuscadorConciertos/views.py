@@ -127,15 +127,6 @@ def ticket_events(request, artist_id):
     get_events_for_id(artist_id)
 
 
-def clean_database(request):
-    artists = Artist.objects.all()
-    conciertos = Concierto.objects.all()
-
-    # Borra todos los artistas, con el cascade del modelo ya se eliminan los conciertos
-    artists.delete()
-
-    return redirect(reverse('buscador'), {'artists': artists, 'conciertos': conciertos})
-
 def delete_artist(request, artist_id): 
     artists = Artist.objects.all()
     conciertos = Concierto.objects.all()

@@ -131,7 +131,6 @@ $(document).ready(function() {
           console.log(data);
           console.log('Filtrado');
           showConciertos(JSON.stringify(data));  // Lo necesito para que me funcione el JSON.parse
-          loadMap(JSON.stringify(data));// Lo necesito para que me funcione el JSON.parse
           setTimeout(function() {
             $('#spinner2').removeClass('show-spinner2');
             $('#overlay2').removeClass('overlay-show2');
@@ -163,27 +162,7 @@ $(document).ready(function() {
       }
     });
   }
-  
-  function loadMap(conciertosJson) {
-    var conciertos = JSON.parse(conciertosJson);
-  
-    var waypoints = "";
-    var origin = "";
-    var destination = "";
-  
-    for (var i = 1; i < conciertos.length - 1; i++) {
-      waypoints += conciertos[i].place + "," + conciertos[i].country + "|";
-    }
-    origin = conciertos[0].place + "," + conciertos[0].country;
-    destination = conciertos[conciertos.length - 1].place + "," + conciertos[conciertos.length - 1].country;
 
-    console.log(waypoints);
-    cred = 'AIzaSyC4GYQA9Yk5TpyJKIb4ATbasxQ9TIcpiaw'
-  
-    var maps_url = "https://www.google.com/maps/embed/v1/directions?key=" + cred + "&origin=" + origin + "&destination=" + destination + "&waypoints=" + waypoints.slice(0, -1) + "&units=metric&mode=driving";
-  
-    $('.map iframe').attr('src', maps_url);
-  }
 
   function showConciertos(conciertosJson) {
     //console.log(conciertosJson);

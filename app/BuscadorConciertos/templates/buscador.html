@@ -106,30 +106,13 @@
     <h1>Lista de conciertos (artista)</h1>
       <div id="titulares" class="titulares"></div>
       <div id="diccionario"></div>
-
-      <form method="post" action="{% url 'clean_database' %}">
-        {% csrf_token %}
-        <button type="submit" id="borrar_base">VACIAR LA BASE DE DATOS ¡PROVISIONAL!</button>
-    </form>
   </div>
   
 </div>
 
 
-<div class="map" id="mapmapmap">
+<div class="map" id="map">
 </div>
-
-<section class="map">
-  <iframe 
-    width="100%"
-    height="100%"
-    frameborder="5" style="border:1"
-    referrerpolicy="no-referrer-when-downgrade"
-    src= ""
-    allowfullscreen>
-  </iframe>
-</section>
-
 
 
 <script src="{% static 'BuscadorConciertos/js/presupuesto.js' %}"></script>
