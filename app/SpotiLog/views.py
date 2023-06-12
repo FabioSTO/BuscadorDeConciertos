@@ -114,14 +114,13 @@ def get_artists_from_playlist(request):
             except IntegrityError: # Si viola la unicidad del campo artista (se repite)
                 continue
     
-
     return HttpResponse(status=204)
 
 def spotilog(request):
     artists = Artist.objects.all()
 
     try:
-        if credentials.SPOTIFY_CODE is None or credentials.SPOTIFY_TOKEN is None: # Para evitar el KeyError al recargar la página estando logueado
+        if credentials.SPOTIFY_CODE == '' or credentials.SPOTIFY_TOKEN == '': # Para evitar el KeyError al recargar la página estando logueado
             credentials.SPOTIFY_CODE = request.GET.get('code')
             credentials.SPOTIFY_TOKEN = get_Spotoken(credentials.SPOTIFY_CODE)
     except KeyError:                                                              # En caso de que caduque el token, para que te redirija a la autorización otra vez
