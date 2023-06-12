@@ -52,9 +52,10 @@ def get_top_artists(request):
 
     for artist in data['items']:
         try:
-            i += 1
-            artist = Artist(name=artist['name'], artist_id=i, is_spotified=True)
-            artist.save()
+            id = views.get_attraction_id(artist['name'],True)
+            if id:
+                    views.get_events_for_id(id)
+
 
         except IntegrityError: # Si viola la unicidad del campo artista (se repite)
                 continue
@@ -105,9 +106,10 @@ def get_artists_from_playlist(request):
     for track in data['items']:
         for artist in track['track']['artists']:
             try:
-                i += 1
-                artist = Artist(name=artist['name'], artist_id=i, is_spotified=True)
-                artist.save()
+                print(artist['name'])
+                id = views.get_attraction_id(artist['name'],True)
+                if id:
+                    views.get_events_for_id(id)
                 
             except IntegrityError: # Si viola la unicidad del campo artista (se repite)
                 continue
@@ -122,7 +124,7 @@ def spotilog(request):
         if credentials.SPOTIFY_CODE is None or credentials.SPOTIFY_TOKEN is None: # Para evitar el KeyError al recargar la página estando logueado
             credentials.SPOTIFY_CODE = request.GET.get('code')
             credentials.SPOTIFY_TOKEN = get_Spotoken(credentials.SPOTIFY_CODE)
-    except KeyError:                                                              # En caso de que caduque el token, para que te redirija ala autorización otra vez
+    except KeyError:                                                              # En caso de que caduque el token, para que te redirija a la autorización otra vez
         url_auth = f'https://accounts.spotify.com/authorize?response_type=code&client_id={ credentials.SPOTIFY_CLIENT_ID }&redirect_uri=http://127.0.0.1:8000/SpotiLog/spotilog/&scope=user-top-read playlist-read-private'
         return redirect(url_auth)
 

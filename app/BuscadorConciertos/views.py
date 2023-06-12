@@ -58,7 +58,7 @@ def get_distance(origen, destino):
 
 
 # Create your views here.
-def get_attraction_id(artist_name):
+def get_attraction_id(artist_name,spoti):
 
     orden = 'relevance,desc'
     # Código para obtener el attractionId de Ticketmaster correspondiente al artista
@@ -73,16 +73,16 @@ def get_attraction_id(artist_name):
         attraction_id = datete['_embedded']['attractions'][0]['id']
         attraction_name = datete['_embedded']['attractions'][0]['name']
 
-        artist = Artist(name=attraction_name, artist_id=attraction_id)
+        artist = Artist(name=attraction_name, artist_id=attraction_id, is_spotified=spoti)
         artist.save()
 
     except KeyError:
         artist = None
-
+        return None
     except AttributeError:
         artist = None
         return None
-    
+    print(artist)
     return artist.id  #El id dentro de la base de usuario
 
 
@@ -117,7 +117,7 @@ def get_events_for_id(artist_id):
 
 def ticketmaster(request, artist_name):
 
-    artist_id = get_attraction_id(artist_name)
+    artist_id = get_attraction_id(artist_name,False)
 
     return artist_id
 
@@ -180,8 +180,6 @@ def iniciarBusqueda(request):
     dataframe_selecciones = pd.DataFrame(conciertos_df)
     conciertos_json = dataframe_selecciones.to_json(orient='records')
 
-    print(conciertos_json)
-
     return HttpResponse(conciertos_json, content_type='application/json')
 
 def buscador(request):
@@ -199,7 +197,6 @@ def buscador(request):
 
 def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
     if not df.empty:
-        print(inicio)
         fecha_inicio = datetime.strptime( inicio,'%Y-%m-%d').date()
         fecha_fin = datetime.strptime( fin,'%Y-%m-%d').date()
         
@@ -240,10 +237,6 @@ def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
                 selecciones.append(seleccion) #Añade a la lista de seleccionados el mejor concierto
                 ubi = seleccion['place'] #Nueva ubi de origen
             #selecciones = pd.concat([selecciones, seleccion], ignore_index=True)
-
-            print(total_price)
-            print(arid)
-
             
 
             df = df.loc[df['date'] >= limite] #Eliminar filas de esta semana
