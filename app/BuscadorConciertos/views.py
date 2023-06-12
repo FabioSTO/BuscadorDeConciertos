@@ -230,19 +230,21 @@ def aplicar_filtros(df, pais, presupuesto, inicio, fin, ubi):
                 
             seleccion = semana_actual.loc[semana_actual['price+dist'].idxmin()] #Seleccionamos "mejor" concierto de la semana actual
 
-            arid = seleccion['artist_id']
-            df = df.query("artist_id != @arid")
+            if (total_price+float((seleccion['price']))) < float(presupuesto):
+
+                arid = seleccion['artist_id']
+                df = df.query("artist_id != @arid")
             
-            total_price += float(seleccion['price']) #Va obteniendo el precio total
+                total_price += float(seleccion['price']) #Va obteniendo el precio total
 
-            selecciones.append(seleccion) #Añade a la lista de seleccionados el mejor concierto
-
+                selecciones.append(seleccion) #Añade a la lista de seleccionados el mejor concierto
+                ubi = seleccion['place'] #Nueva ubi de origen
             #selecciones = pd.concat([selecciones, seleccion], ignore_index=True)
 
             print(total_price)
             print(arid)
 
-            ubi = seleccion['place'] #Nueva ubi de origen
+            
 
             df = df.loc[df['date'] >= limite] #Eliminar filas de esta semana
 
