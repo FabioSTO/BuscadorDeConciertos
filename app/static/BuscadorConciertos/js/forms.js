@@ -153,8 +153,9 @@ $(document).ready(function() {
         console.log(data);
         var titularesDiv = $('#titulares');
         titularesDiv.empty();
-        var randomIndex = Math.floor(Math.random() * data.length);
-        var titularAleatorio = data[randomIndex];
+        titularesArray = data.titulares;
+        var randomIndex = Math.floor(Math.random() * titularesArray.length);
+        var titularAleatorio = titularesArray[randomIndex];
         titularesDiv.append('<p>' + titularAleatorio + '</p>')
         //data.forEach(function(titular) {
         //  titularesDiv.append('<p>' + titular + '</p>');

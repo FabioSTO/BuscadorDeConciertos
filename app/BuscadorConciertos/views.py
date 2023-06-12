@@ -1,6 +1,5 @@
-import os
-import subprocess
-import unicodedata
+from scrapy_app.billboard.billboard.spiders.billboard_spider import BillboardSpider
+import scrapydo
 import requests
 from . import credentials
 from django.shortcuts import render, redirect, reverse
@@ -11,10 +10,10 @@ from django.http import HttpResponse
 import json
 
 
-def getTitulares(request):
+'''def getTitulares(request):
     current_dir = os.getcwd()
     #scrapy_dir = os.path.join(current_dir, 'scrapy_app/billboard')
-    scrapy_dir = 'scrapy_app/billboard/billboard'
+    scrapy_dir = 'scrapy_app/billboard'
     os.chdir(scrapy_dir)
     subprocess.run(['scrapy', 'crawl', 'billboard', '-o', 'output.json'])
 
@@ -26,7 +25,22 @@ def getTitulares(request):
     print(titulares)
     os.remove(os.path.join(scrapy_dir, 'output.json'))
     
-    return HttpResponse(json.dumps(titulares), content_type='application/json')
+    return HttpResponse(json.dumps(titulares), content_type='application/json')'''
+
+scrapydo.setup()
+
+def getTitulares(request):
+    #spider = BillboardSpider()
+    results = scrapydo.run_spider(BillboardSpider)
+    
+    titulares = [result['title'] for result in results]
+
+    response_data = {'titulares': titulares}
+
+    json_data = json.dumps(response_data)
+
+    # Devuelve el HttpResponse con el contenido JSON
+    return HttpResponse(json_data, content_type='application/json')
 
 
 def get_distance(origen, destino):
