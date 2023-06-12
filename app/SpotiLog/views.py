@@ -89,7 +89,8 @@ def get_playlists(request):
 def get_artists_from_playlist(request):
 
     playlist_name = request.POST.get('playlistName')
-
+    if not playlist_name:
+        return HttpResponse(status=204)
     playlist = Playlist.objects.get(name=playlist_name)
     playlist_id = playlist.playlist_id  # Obtenemos la id asignada al nombre
 
