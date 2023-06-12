@@ -1,5 +1,4 @@
 import scrapy
-from scrapy_splash import SplashRequest
 
 class BillboardSpider(scrapy.Spider):
     name = "billboard"
