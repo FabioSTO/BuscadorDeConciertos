@@ -17,7 +17,7 @@
 **__Semana 1 es la semana del 24/04/2023__*
 
 
-## Como ejecutar en Docker
+## Cómo ejecutar en Docker
 
 + Antes de nada, asegurarse de tener instalado Docker y su extensión, así como Dev Containers:
 ![Ejemplo configuración](/app/static/BuscadorConciertos/img/extDocker.png)
@@ -30,8 +30,16 @@
 + Ejecutar el comando 'python manage.py runserver 0.0.0.0:8000' para correr la aplicación. Es posible tener que realizar 'python manage.py makemigrations' y 'python manage.py migrate'.
 ![Ejemplo configuración](/app/static/BuscadorConciertos/img/comando.png)
 
-+ Acceder a la aplicación escribiendo la ruta 'http://localhost:8000/'.
++ Acceder a la aplicación escribiendo la ruta 'http://localhost:8000/'. ¡Dependiendo del buscador usado existe la posibilidad de que haya sido guardada en caché propia  ciertos archivos estáticos de versiones anteriores de la aplicación! Por lo que se recomienda el uso de modo incógnito o la limpieza de la caché del buscador.
 ![Ejemplo configuración](/app/static/BuscadorConciertos/img/ruta.png)
+
+## Instrucciones para el LOGGING con SPOTIFY:
+
++ Una vez dentro de la app, para loguearse se pulsará en el icono de Spotify de la esquina superior-derecha:
+![Instrucciones para logging](/app/static/BuscadorConciertos/img/Log_sel.png)
+
++ Se escogerá la opción de Logging mediante Google y se introducirán las credenciales (CORREO: usuariopruebasspotiapi@gmail.com y CONTRASEÑA: Spoti_Pru3b4s.). El siguiente paso sería pulsar en "autorizar" a la aplicación a leer tus datos de Spotify (este paso puede que se salte directamente ya que hemos autorizado previamente con esta cuenta durante las pruebas en el desarrollo):
+![Instrucciones para logging](/app/static/BuscadorConciertos/img/Goog_sel.png)
 
 
 ## Riesgos en versión actual:
