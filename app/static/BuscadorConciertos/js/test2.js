@@ -1,20 +1,37 @@
 $(function() {
     $('#filtros').submit(async function(event) {
-    var cities = ["Madrid","Coruna","Barcelona","Valencia","Bilbao","Sevilla","Lugo","Andorra","Cadiz","Tarragona","Vigo"] 
+    var cities = ["Landover","Columbus","Seattle","Las Vegas","Chicago","Miami"]
 
     var map = new window.google.maps.Map(document.getElementById("mapmapmap"));
-    
-    var stops = await geocodeCities(cities);
 
-    console.log(stops);
+    //////////////////////////////////
+    var url = '/iniciarBusqueda/';
+    var cities2 = [];
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: $(this).serialize(),
+        success: async function(data) {
+          for (var item = 0; item < data.length; item++){
+            cities2.push(data[item].place);
+          }
+        var stops2 = await geocodeCities(cities2);
+        console.log(stops2);
+    var stops =await geocodeCities(cities);
     // new up complex objects before passing them around
+    if (stops2.length > 0){
         var directionsDisplay = new window.google.maps.DirectionsRenderer();
         var directionsService = new window.google.maps.DirectionsService();
-        Tour_startUp(stops);
+        Tour_startUp(stops2);
         window.tour.loadMap(map, directionsDisplay);
         window.tour.fitBounds(map);
-        if (stops.length > 1)
+        if (stops2.length > 1)
             window.tour.calcRoute(directionsService, directionsDisplay);
+      }
+    }
+    });
+    /////////////////////////////////////
+    
     
     });
 });
@@ -72,7 +89,7 @@ function Tour_startUp(stops) {
                 // start up with end of previous tour leg
                 itemsCounter--;
             }
-
+            console.log(batches);
             // now we should have a 2 dimensional array with a list of a list of waypoints
             var combinedResults;
             var unsortedResults = [{}]; // to hold the counter and the results themselves as they come back, to later sort
@@ -155,6 +172,7 @@ function geocodeCity(city) {
           resolve(geocodedResult);
         } else {
           reject("Error de geocodificación para la ciudad: " + city);
+          
         }
       });
     });
