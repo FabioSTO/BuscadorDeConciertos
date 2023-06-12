@@ -11,9 +11,10 @@ from django.http import HttpResponse
 import json
 
 
-def get_titulares(request):
+def getTitulares(request):
     current_dir = os.getcwd()
-    scrapy_dir = os.path.join(current_dir, 'scrapy_app/billboard')
+    #scrapy_dir = os.path.join(current_dir, 'scrapy_app/billboard')
+    scrapy_dir = 'scrapy_app/billboard/billboard'
     os.chdir(scrapy_dir)
     subprocess.run(['scrapy', 'crawl', 'billboard', '-o', 'output.json'])
 
