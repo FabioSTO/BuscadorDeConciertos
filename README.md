@@ -1,22 +1,3 @@
-# aplicacion_gjango-cancelo_fernandez_senande
-
-## Trabajo semanal aproximado:
-
-
-
-|         |   Fabio   |    Fran   |  Miguel   |
-|---------|-----------|-----------|-----------|
-| Semana 1| 12 horas  |  8 horas  |  7 horas  |
-| Semana 2| 16 horas  |  4 horas  | 13 horas  |
-| Semana 3| 4 horas   | 12 horas  |  4 horas  |
-| Semana 4| 4 horas   |  3 horas  |  3 horas  |
-| Semana 5| 4 horas   |  2 horas  |  3 horas  |
-| Semana 6| 20 horas  |  4 horas  |  12 horas |
-| Semana 7| 50 horas  |  40 horas |  32 horas |
-
-**__Semana 1 es la semana del 24/04/2023__*
-
-
 ## Cómo ejecutar en Docker
 
 + Antes de nada, asegurarse de tener instalado Docker y su extensión, así como Dev Containers:
