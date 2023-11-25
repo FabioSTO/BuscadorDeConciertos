@@ -1,3 +1,5 @@
+Esta app de Django permite al usuario buscar conciertos especificando lugar, fechas y presupuesto. El usuario puede especificar artistas concretos en el buscador o puede iniciar sesión con Spotify y seleccionar sus artistas más escuchados, playlists personales o playlists públicas. Se le creará una ruta ajustada al presupuesto para atender a la mayor cantidad de conciertos posibles y se mostrará un mapa con las rutas. Se usan las APIs de Ticketmaster, Spotify y Google Distance Matrix.
+
 ## Cómo ejecutar en Docker
 
 + Antes de nada, asegurarse de tener instalado Docker y su extensión, así como Dev Containers:
